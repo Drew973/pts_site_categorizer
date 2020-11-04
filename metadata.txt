@@ -10,7 +10,7 @@
 name=site categoriser
 qgisMinimumVersion=3.0
 description=interface to site category database
-version=0.1.01
+version=3.01
 author=drew
 email=a
 

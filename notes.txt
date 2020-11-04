@@ -1,0 +1,27 @@
+
+Might need to add gradients and curvatures to events. Easily done. 
+
+
+need to view op in qgis. table and refresh on change? or view?
+
+
+icon
+context menu with
+drop row
+go to
+
+
+when jc updated:
+remake op for section
+put geom in right place,
+
+
+bugs:
+
+marker not removed when plugin closed
+marker in wrong place when using with bing maps
+some geometry in op is point. because s_ch and e_ch> meas_len sec.
+
+todo:
+
+create op view

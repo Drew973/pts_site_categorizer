@@ -1,0 +1,26 @@
+
+
+
+
+
+jc:
+put point in right place when chainage changed ,
+
+qsqltablemodel seems incompatible with postgres triggers?
+
+
+
+bugs:
+
+marker not removed when plugin closed
+marker in wrong place when using with bing maps
+some geometry in op is point. because s_ch and e_ch> meas_len sec. events?
+
+todo:
+zoom to option in jc view
+
+one way checkbox
+
+
+database dialog:
+	pressing enter should accept dialog.

@@ -1,0 +1,11 @@
+create table if not exists op(
+sec varchar
+,reversed bool
+,start_ch float
+,end_ch float
+,category cat
+,irl float
+,geom geometry('linestring',27700)
+)
+
+--assuming category same for all lanes in same direction

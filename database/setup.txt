@@ -1,0 +1,15 @@
+create schema if not exists categorizing;
+set search_path to categorizing,public;
+create extension if not exists postgis;
+types/types.sql;
+tables/network.txt;
+tables/other_events.txt;
+functions/network_functions.sql;
+tables/jc.txt;
+tables/op.txt;
+functions/max_cat.sql;
+functions/cat_to_irl.sql;
+functions/range_arrays.sql;
+functions/array_functions.sql;
+functions/get_events.sql;
+functions/process_sec.sql;

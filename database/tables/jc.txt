@@ -1,0 +1,13 @@
+--table of junctiona and crossings/
+
+drop table if exists jc;
+
+create table if not exists jc
+
+(
+sec varchar references network(sec) on delete cascade on update cascade
+,ch int
+,category cat
+,geom geometry('Point',27700)
+,pk serial primary key
+)

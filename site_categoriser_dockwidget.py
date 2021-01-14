@@ -40,7 +40,7 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 
         self.dd=None#database_interface subclass
         
-        self.ch_tool=sec_ch_widget.sec_ch_widget(self,self.dd)
+        self.ch_tool=sec_ch_widget.sec_ch_widget(self)
         self.main_widget.layout().insertWidget(1,self.ch_tool)
 
         self.connect_button.clicked.connect(self.connect)
@@ -69,42 +69,20 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
             self.dd=None
 
 
-    
+#when is this called?   
     def closeEvent(self, event):
-        self.dd.disconnect()
-        self.ch_tool.remove_marker()
+        if self.dd:
+            self.dd.disconnect()
+
+
         self.closingPlugin.emit()
         event.accept()
-
-
-    def old_connect(self):
-        if self.dd.exec_():
-            if self.dd.connected:
-                self.database_label.setText('Connected to %s'%(self.dd.db.databaseName()))
-                self.setup_jc()
-                self.note_edit.textChanged.connect(lambda note:self.dd.set_note(self.ch_tool.current_sec(),note))
-                self.one_way_box.stateChanged.connect(lambda:self.dd.set_one_way(self.ch_tool.current_sec(),self.one_way_box.isChecked()))
-                self.checked_box.stateChanged.connect(lambda:self.dd.set_checked(self.ch_tool.current_sec(),self.checked_box.isChecked()))
-                
-                #self.setup_op()
-
-                
-                try:
-                    self.dd.sql('set search_path to categorizing,public;')
-                    print('schema')
-                except:
-                    print('error')
-                    pass
-            else:
-                self.database_label.setText('Not Connected')
-
-
 
 
         
 #opens help/index.html in default browser
     def open_help(self):
-        help_path=os.path.join(os.path.dirname(__file__),'help','index.html')
+        help_path=os.path.join(os.path.dirname(__file__),'help','overview.html')
         help_path='file:///'+os.path.abspath(help_path)
         QDesktopServices.openUrl(QUrl(help_path))
 

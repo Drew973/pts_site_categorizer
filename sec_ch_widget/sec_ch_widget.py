@@ -25,7 +25,7 @@ class mt(QgsMapToolEmitPoint):
 class sec_ch_widget(Ui_Form,QWidget):
     sec_changed = pyqtSignal(str,name='sec_changed')
     
-    def __init__(self,parent,dd):
+    def __init__(self,parent):
         super(sec_ch_widget,self).__init__(parent)
         
         self.setupUi(self)
@@ -37,7 +37,6 @@ class sec_ch_widget(Ui_Form,QWidget):
         self.layer_box.layerChanged.connect(lambda layer:set_to(layer=layer,fb=self.len_field_box,name='meas_len'))
         
         self.sec_field_box.fieldChanged.connect(self.field_changed)
-        self.dd=dd
         
         self.go_to_button.clicked.connect(self.set_sec)
         self.sec_edit.textChanged.connect(self.set_sec)
@@ -57,19 +56,21 @@ class sec_ch_widget(Ui_Form,QWidget):
 
 
 
-#point emitted by map tool is in project crs   
+#point emitted by map tool is in project crs? or canvas crs?   
+#crs of point is  pt_crs=iface.mapCanvas().mapSettings().destinationCrs()
     def map_clicked(self,pt):        
         self.set_ch(int(pt_to_ch(pt,sec=self.sec,
                                  sec_field=self.sec_field_box.currentField(),
                                  len_field=self.len_field_box.currentField(),
                                  layer=self.layer_box.currentLayer(),
-                                 pt_crs=project_crs()
+                                 pt_crs=iface.mapCanvas().mapSettings().destinationCrs()#crs of canvas
+
                                  )))
+#pt_crs=project_crs()
 
     def set_sec(self,sec=None):
         if not sec:
             sec=self.sec_edit.text()
-        #if self.dd.sec_exists(sec):
         if sec_exists(sec,self.layer_box.currentLayer(),self.sec_field_box.currentField()):
             if sec!=self.sec:
                 self.sec=sec
@@ -89,7 +90,8 @@ class sec_ch_widget(Ui_Form,QWidget):
     #move marker to sec and chainage c
     def redraw(self,sec,c):
         if not self.sec is None:
-            pt=ch_to_pt(sec,ch=c,layer=self.layer_box.currentLayer(),sec_field=self.sec_field_box.currentField(),len_field=self.len_field_box.currentField(),dest_crs=project_crs());
+            #pt=ch_to_pt(sec,ch=c,layer=self.layer_box.currentLayer(),sec_field=self.sec_field_box.currentField(),len_field=self.len_field_box.currentField(),dest_crs=project_crs());
+            pt=ch_to_pt(sec,ch=c,layer=self.layer_box.currentLayer(),sec_field=self.sec_field_box.currentField(),len_field=self.len_field_box.currentField(),dest_crs=iface.mapCanvas().mapSettings().destinationCrs());
             print(pt)
             self.marker.setCenter(pt)#marker at point in project crs
             self.marker.updatePosition()
@@ -137,6 +139,10 @@ class sec_ch_widget(Ui_Form,QWidget):
         return sec_to_feature(sec,self.layer_box.currentLayer(),self.sec_field_box.currentField())
         
         
+    def __del__(self):
+        self.remove_marker()
+        canvas.unsetMapTool(self.map_tool)
+        print('deleting sec_ch widget')
             
 #makes unique values into QStringListModel. field needs to be a string field.
 def to_string_list_model(layer,field):
@@ -225,7 +231,9 @@ def map_crs():
 
 
 
-#finds chainage of qgspointxy pt with crs pt_crs. If pt_crs is none assumes point is in layer crs
+#finds section chainage of qgspointxy pt with crs pt_crs. If pt_crs is none assumes point is in layer crs
+
+
 def pt_to_ch(pt,sec,layer,sec_field,len_field,pt_crs=None):
 
     f=sec_to_feature(sec,layer,sec_field)
@@ -237,8 +245,9 @@ def pt_to_ch(pt,sec,layer,sec_field,len_field,pt_crs=None):
         t=QgsCoordinateTransform(pt_crs,layer.sourceCrs(),QgsProject.instance())#documentation says only need source and destination. lies.    
         pt=t.transform(pt)#transform takes qgspoint xy
         
-    pt=QgsGeometry().fromWkt(pt.asWkt())#convert to qgsgeometry
+    #pt=QgsGeometry().fromWkt(pt.asWkt())#convert to qgsgeometry no scrid.
 
+    pt=QgsGeometry().fromPointXY(pt)
 
     return sec_len*g.lineLocatePoint(pt)/g.length() #takes QgsGeometry not qgspointxy
         

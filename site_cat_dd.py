@@ -63,7 +63,7 @@ class site_cat_dd(database_interface):
     #true,false or null
     def set_one_way(self,sec,one_way):
         self.sql('update network set one_way=%(one_way)s where sec=%(sec)s',{'sec':sec,'one_way':one_way})
-
+        self.sql('select process_sec(%(sec)s)',{'sec':sec})#may need to reprocess section to add/remove reverse direction
 
     #true,false or null
     def is_checked(self,sec):

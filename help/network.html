@@ -1,20 +1,45 @@
 <!DOCTYPE html>
+
 <html>
+
+<head>  
+ <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>  
+
 <title>Network</title>
+
+<body>
+
+<div class="navbar_div">
+	<iframe src="navbar.html" class="navbar_iframe" name="contents" >
+	<p>Your browser does not seem to support iframes.</p>
+	</iframe>
+<div>
+
+
+
+<div class="main_div">
     <body>
         <h3 id="network">Network table</h3>
 
 	<p>Table containing road network<p>
+		<ul>
+		<li>sec = section label</li>
+		<li>geom = linestring geometry.</li>
+		<li>meas_len = 'official' length of section. Used to calculate section chainage.</li>
+		<li>one_way = True where section is one way.</li>
+		<li>road = road name</li>
+		<li>rbt = True where section is roundabout</li>
+		<li>category=default category for road. where no events occur pieces of the section will have this category. Should be A,B,C,R</li>
+		</ul>
 
-		<p>-	sec = section label<p>
-		<p>-	geom = linestring geometry.<p>
-		<p>-	meas_len = 'official' length of section. Used to calculate section chainage.<p>
-		<p>-	one_way = True where section is one way.<p>
-		<p>-	road = road name<p>
-		<p>-	rbt = True where section is roundabout<p>
-		<p> 	category=default category for road. where no events road will be given this category. Should be A,B,C,R
+
  	<p> Created as:<p>
 	<object data="../database/tables/network.txt" type="text/plain" typemustmatch="" width="500" style="height: 300px"></object>
 
     </body>
+</html>
+
+</div>
+
 </html>

@@ -9,9 +9,8 @@
 </head>  
 
 <body>
-
 <div class="navbar_div">
-	<iframe src="navbar.html" class="navbar_iframe" name="contents" >
+	<iframe src="navbar.html?parent=overview.html" class="navbar_iframe" name="contents" >
 	<p>Your browser does not seem to support iframes.</p>
 	</iframe>
 <div>
@@ -25,54 +24,13 @@
         <h3 id="home">Overview</h3>
 
         <p>Postgres Database based tool for categorizing roads.</p>
-		<p> Outputs site categories to table op given junctions+crossings(table jc) and other events such as curvature and gradient.(table other_events)<p>
-
+		<p> Outputs site categories to <a href="op.html" >op table</a> given junctions+crossings(<a href="jc.html" >jc table</a>) and other events such as curvature and gradient.(<a href="other_events.html" >other_events table</a>)<p>
 
         <h3 id="use">How to Use:</h3>
-		<p>	Connect to a database<p>
-
-		<h3 id="set_fields"> Import network layer and set fields:</h3>
-		<p>The network is in table <a href="network.html">categorizing.network</a>. Import this into qgis.<p>
-		<p>Under the layer tab: set network layer to this,label field to 'sec' and length field to 'meas_len'.<p>
-		<figure>
-			<img src="examples/layer_setup.png" alt="layer setup"width="600" height="1000">
-		<figcaption>setting layer and fields</figcaption>  
-		</figure>  	
-
-
-
-
-		<h4 id="section_and_chainage">Selecting Section and Chainage</h4>
-
-		<p> Sections can be selected by typing in the section label and pressing 'Go To' or by selecting a single feature of the network layer and clicking 'From Layer'. This will show and edit it's properties.<p>
-		<p> A marker will appear on the map corresponding to the chainage in the box. The 'From Click' button will cause clicking on the map to move the marker and chainage to the nearest point of the selected section<p>
-
-
-		<figure>
-			<img src="examples/selecting_section.png" alt="layer setup"width="600" height="1000">
-		<figcaption>Select section and chainage through these.</figcaption>  
-		</figure>  
-
-
-
-		<h4 id="junctions_and_crossings">Input Junctions and Crossings</h4>
-			<p> Junctions and crossings can be added at the selected section and chainage by selecting the category and clicking 'add'.<p>
-			<p> Junctions and crossings are stored in table <a href="jc.html">categorizing.jc</a>.Importing this into QGIS can be helpful  <p>
-			<p> Altering the junctions and crossings table will automatically update the categories (in <a href="op.html">categorizing.op</a> ).<p>
-			
-
-		<h5 id="before_after">Before and After Section:</h5>
-			<p> Sometimes sections can contain the approach to a junction/crossing that is before or after the section.<p>
-			<p> Add junctions <50m after the end of a section with a chainage>section length.These will affect site categories for the forward direction.<p>
-			<p> Add junctions <50m before the start of a section with a negative chainage.These will affect site categories for the reverse direction.<p>
-
-
-		<figure>
-			<img src="examples/junction_after.png" alt="junction after section"width="500" height="500">
-		<figcaption>Example:Junction 41m after end of section should be added with chainage of section length+41m</figcaption>  
-		</figure>  
-
-
+		<ul>
+			<li><a href="connect.html" >Connect the plugin to database</a></li>
+			<li><a href="junctions_and_crossings.html" >Add junctions and crossings</a> by <a href="select_section.html" >selecting section and chainage</a> and pressing add button.</li>
+		</ul>
 
 
 

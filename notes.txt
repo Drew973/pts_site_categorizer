@@ -1,26 +1,44 @@
+user defines get_events(sect varchar,rev bool) function.
+returns table of events with s_ch int,e_ch int,category categorizing.cat,irl float
+start chainage,end chainage,category,irl
+
+This function should use values in the jc table and other_events table and roat_class from network.
+
+defines what site categories mean and what irl they should have
 
 
 
 
+use range_array_difference.
+easier to explain to idiots.
 
-jc:
-put point in right place when chainage changed ,
 
-qsqltablemodel seems incompatible with postgres triggers?
+
+get range_array_difference working properly.
+
+use readings where have them. subtract where doesn't match curvature from 
+
+S1 and S2 everywhere.
+
+some op outside section length.
+
+
+with a as (select irl,ct,array_agg(int8range(s_ch,e_ch,'[]')) from get_events('A5230/48',False) where s_ch!=e_ch group by irl,ct order by irl desc,ct)
+,b as (select irl,ct,array_agg from a)
+
+select irl,ct,array_agg,(select array_cat_agg(array_agg) from a where a.irl>b.irl or (a.irl=b.irl and a.ct<b.ct)) from b
+
+
+
+
+group by irl,cat,
+
+
+
+geom should be in direction of section when reversed.
+
+
 
 
 
 bugs:
-
-marker not removed when plugin closed
-marker in wrong place when using with bing maps
-some geometry in op is point. because s_ch and e_ch> meas_len sec. events?
-
-todo:
-zoom to option in jc view
-
-one way checkbox
-
-
-database dialog:
-	pressing enter should accept dialog.

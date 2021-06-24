@@ -7,4 +7,5 @@ sec varchar primary key
 ,rbt bool
 ,road_class categorizing.cat--default category for section. should be A,B,C or R
 ,note varchar
+,checked bool
 )

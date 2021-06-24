@@ -1,15 +1,16 @@
 from  qgis.PyQt import uic
 from qgis.PyQt.QtCore import pyqtSignal,Qt,QSettings,QUrl
 import os
-from qgis.PyQt.QtWidgets import QDockWidget,QMenu,QMessageBox
+from qgis.PyQt.QtWidgets import QDockWidget,QMenu,QMessageBox,QMenuBar
 #from . import marker
 from .sec_ch_widget import sec_ch_widget
 from.site_cat_dd import site_cat_dd
 from qgis.utils import iface
-from qgis.PyQt.QtSql import QSqlDatabase,QSqlTableModel
+from qgis.PyQt.QtSql import QSqlTableModel
 from PyQt5.QtGui import QDesktopServices
 from .database_dialog.database_dialog import database_dialog
-from qgis.PyQt.QtSql import QSqlDatabase
+
+
 
 
 def fixHeaders(path):
@@ -41,15 +42,32 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         self.dd=None#database_interface subclass
         
         self.ch_tool=sec_ch_widget.sec_ch_widget(self)
-        self.main_widget.layout().insertWidget(1,self.ch_tool)
+        self.main_widget.layout().insertWidget(0,self.ch_tool)
 
-        self.connect_button.clicked.connect(self.connect)
         self.ch_tool.sec_changed.connect(self.sec_changed)
-        self.prepare_database_button.clicked.connect(self.setup_database)
-        self.help_button.clicked.connect(self.open_help)
         self.init_jc_menu()      
+        self.initTopMenu()
+        
 
+    def initTopMenu(self):
+        topMenu = QMenuBar()
+        self.main_widget.layout().setMenuBar(topMenu)
+        
+        #help
+        helpMenu = topMenu.addMenu("Help")
 
+        openHelpAct = helpMenu.addAction('Open help (in your default web browser)')
+        openHelpAct.triggered.connect(self.openHelp)
+        
+        #database
+        databaseMenu = topMenu.addMenu("Database")
+        connectAct = databaseMenu.addAction('Connect to Database...')
+        connectAct.triggered.connect(self.connect)
+        setupAct = databaseMenu.addAction('Setup Database for site categories...')
+        setupAct.triggered.connect(self.setupDatabase)
+
+        
+        
     def connect(self):
         db=database_dialog(self).exec_()
         try:
@@ -60,8 +78,8 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
             self.checked_box.stateChanged.connect(lambda:self.dd.set_checked(self.ch_tool.current_sec(),self.checked_box.isChecked()))
             #self.setup_op()
             self.dd.sql('set search_path to categorizing,public;')
-            self.database_label.setText('Connected to %s'%(db.databaseName()))
-
+            self.setWindowTitle(self.dd.db_name()+' - site categorizer')
+            
             
         except Exception as e:
             iface.messageBar().pushMessage("could not connect to database. %s"%(str(e)),duration=4)
@@ -81,7 +99,7 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 
         
 #opens help/index.html in default browser
-    def open_help(self):
+    def openHelp(self):
         help_path=os.path.join(os.path.dirname(__file__),'help','overview.html')
         help_path='file:///'+os.path.abspath(help_path)
         QDesktopServices.openUrl(QUrl(help_path))
@@ -169,7 +187,7 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         self.jc_model.select()
         
 
-    def setup_database(self):
+    def setupDatabase(self):
         msgBox=QMessageBox();
         msgBox.setText("Perform first time database setup.");
         msgBox.setInformativeText("Continue?");

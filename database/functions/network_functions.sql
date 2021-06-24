@@ -152,6 +152,7 @@ RETURNS geometry('linestring') AS $$
 		declare
 			f1 float;
 			f2 float;
+			r geometry;
         BEGIN	
 				f1=start_ch/len;
 				f2=end_ch/len;
@@ -172,12 +173,23 @@ RETURNS geometry('linestring') AS $$
 					f2=0;
 				end if; 
 				
-				if f2>f1 then
-					return ST_LineSubstring(L,f1,f2);
-				else
-					return st_reverse(ST_LineSubstring(L,f2,f1));
+				if f2=f1 then
+					raise notice 'f2=f1';
+					return null;
 				end if;
-													   
+
+				if f2>f1 then
+					r= ST_LineSubstring(L,f1,f2);
+				else
+					r= st_reverse(ST_LineSubstring(L,f2,f1));
+				end if;
+						
+				if st_geometryType(r)!='ST_LineString' then
+					raise warning 'make_line(%,%,%,%) returned %',st_asText(L),len,start_ch,end_ch,st_geometryType(r);
+				end if;
+										   
+				return r;							   
+												   
 		END;			
 $$ LANGUAGE plpgsql;
 													   
@@ -187,7 +199,29 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION get_line(sect varchar,start_ch float,end_ch float) 
 RETURNS geometry('linestring',27700) AS $$
 		declare g geometry=geom from categorizing.network  where sec=sect;
+		len float=meas_len(sect);
         BEGIN	
-				return make_line(g,meas_len(sect),start_ch,end_ch);
+			if start_ch=end_ch then
+				--raise warning 'get line(%,%,%) start_ch=end_ch',sect,start_ch,end_ch;
+				return null;
+			end if;
+		
+			if start_ch>len then
+				raise warning 'get line(%,%,%) start_ch>section length %',sect,start_ch,end_ch,len;
+			end if;
+
+
+			if end_ch>len then
+				--raise warning 'get line(%,%,%) end chainage>section length %',sect,start_ch,end_ch,len;
+			end if;
+
+			if st_geometrytype(make_line(g,len,start_ch,end_ch))!='ST_LineString' then
+				--raise warning 'get line(%,%,%) returned wrong type',sect,start_ch,end_ch;
+				--raise warning 'make_line(%,%,%,%) returned wrong type',st_asText(g),len,start_ch,end_ch;
+				return null;
+			end if;
+		
+		
+		return make_line(g,len,start_ch,end_ch);
 		END;			
 $$ LANGUAGE plpgsql;	

@@ -1,10 +1,15 @@
 CREATE OR REPLACE FUNCTION array_distinct(arr anyarray) 
 RETURNS anyarray AS $$
 	BEGIN
-		return array(select distinct unnest(arr));
+		return array(select distinct unnest from unnest(arr));
 	END;			
 $$ LANGUAGE plpgsql;
 
+
+CREATE AGGREGATE array_cat_agg(anyarray) (
+  SFUNC=array_cat,
+  STYPE=anyarray
+);
 
 CREATE OR REPLACE FUNCTION array_min(anyarray) RETURNS anyelement AS
 'SELECT min(i) FROM unnest($1) i' LANGUAGE sql IMMUTABLE;

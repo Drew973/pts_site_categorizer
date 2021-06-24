@@ -1,6 +1,6 @@
 from qgis.PyQt.QtSql import QSqlDatabase,QSqlQuery
 import psycopg2
-
+import os
 
 def db_to_con(db):
     return psycopg2.connect(host=db.hostName(),dbname=db.databaseName(),user=db.userName(),password=db.password())
@@ -24,6 +24,9 @@ class database_interface:
         if self.con:
             self.con.close()
 
+
+    def db_name(self):
+        return self.db.databaseName()
 
 #script=filename to give in error message when failed to run script
     def sql(self,q,args={},ret=False,script=None):

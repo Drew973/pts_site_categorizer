@@ -1,10 +1,10 @@
 from qgis.gui import QgsMapToolEmitPoint,QgsVertexMarker#,gsVertexMarker
 from qgis.PyQt.QtGui import QColor
 
-from qgis.PyQt.QtWidgets import QWidget,QCompleter
+from qgis.PyQt.QtWidgets import QWidget,QCompleter,QSizePolicy
 from PyQt5.QtCore import QStringListModel,pyqtSignal
 
-from qgis.core import QgsPointXY,QgsFieldProxyModel,QgsMapLayerProxyModel,QgsFeatureRequest,QgsGeometry,QgsCoordinateTransform#QgsPoint
+from qgis.core import QgsFieldProxyModel,QgsMapLayerProxyModel,QgsFeatureRequest,QgsGeometry,QgsCoordinateTransform#QgsPoint
 from qgis.utils import iface
 
 from qgis.core import QgsProject
@@ -54,7 +54,7 @@ class sec_ch_widget(Ui_Form,QWidget):
         
         self.from_click_button.clicked.connect(lambda:iface.mapCanvas().setMapTool(self.map_tool,clean=True))
 
-
+      #  self.setSizePolicy(QSizePolicy.Minimum,QSizePolicy.Minimum)
 
 #point emitted by map tool is in project crs? or canvas crs?   
 #crs of point is  pt_crs=iface.mapCanvas().mapSettings().destinationCrs()

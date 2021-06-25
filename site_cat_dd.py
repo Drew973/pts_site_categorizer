@@ -5,9 +5,14 @@ from .database_dialog.database_interface import database_interface
 from os import path
 #from qgis.PyQt.QtSql import QSqlQuery
 
+#from qgis.PyQt.QtSql import QSqlTableModel
+
+
+
 
 class site_cat_dd(database_interface):
 
+        
     def sec_exists(self,sec):
         res=self.sql('select sec from network where sec=%(sec)s',{'sec':sec},True)
         res=[r for r in res]
@@ -43,7 +48,8 @@ class site_cat_dd(database_interface):
 
 
     def process_section(self,sec):
-        self.sql('select process_sec(%(sec)s)',{'sec':sec})
+        print('process_section '+sec)
+        self.sql('select categorizing.process(%(sec)s)',{'sec':sec})
 
 
     def get_note(self,sec):

@@ -1,7 +1,6 @@
 set search_path to categorizing,public;
 
 
-
 CREATE OR REPLACE FUNCTION range_array_min(a int8range[]) returns int as 
 	'select cast(min(lower(unnest)) as int) from unnest(a)' 
 	LANGUAGE sql IMMUTABLE;
@@ -110,6 +109,7 @@ $$ LANGUAGE plpgsql;
 
 
 
+drop AGGREGATE if exists range_array_agg(int8range);
 --combine ranges into array of ranges
 CREATE AGGREGATE range_array_agg(int8range) 
 (
@@ -119,12 +119,6 @@ CREATE AGGREGATE range_array_agg(int8range)
 );
 
 
-CREATE AGGREGATE range_array_agg(int8range) 
-(
-  sfunc = array_append,
-  stype = int8range[],
-  finalfunc = range_array_union
-);
 
 
 CREATE OR REPLACE FUNCTION range_array_intersection(a int8range[],b int8range) 
@@ -133,9 +127,6 @@ RETURNS int8range[] as
 select array(select unnest*b from unnest(a) where unnest&&b)
 '			
 LANGUAGE sql IMMUTABLE;
-
-
-
 
 
 
@@ -361,6 +352,5 @@ $$
 	select is_null(gaps(a)) 
 $$	
 LANGUAGE sql IMMUTABLE;
-
 
 

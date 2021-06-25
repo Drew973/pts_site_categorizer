@@ -22,23 +22,20 @@ S1 and S2 everywhere.
 
 some op outside section length.
 
-
 with a as (select irl,ct,array_agg(int8range(s_ch,e_ch,'[]')) from get_events('A5230/48',False) where s_ch!=e_ch group by irl,ct order by irl desc,ct)
 ,b as (select irl,ct,array_agg from a)
 
 select irl,ct,array_agg,(select array_cat_agg(array_agg) from a where a.irl>b.irl or (a.irl=b.irl and a.ct<b.ct)) from b
 
 
-
-
 group by irl,cat,
-
 
 
 geom should be in direction of section when reversed.
 
 
+plugin can limit what categories can be entered. Currently only K,Q1,Q2,Q3
+foreign key on jc references categories(cat) can also do this
 
-
-
-bugs:
+foreign key on other_events references categories(cat)
+fk on op references categories(cat)

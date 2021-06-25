@@ -53,11 +53,6 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         topMenu = QMenuBar()
         self.main_widget.layout().setMenuBar(topMenu)
         
-        #help
-        helpMenu = topMenu.addMenu("Help")
-
-        openHelpAct = helpMenu.addAction('Open help (in your default web browser)')
-        openHelpAct.triggered.connect(self.openHelp)
         
         #database
         databaseMenu = topMenu.addMenu("Database")
@@ -66,12 +61,17 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         setupAct = databaseMenu.addAction('Setup Database for site categories...')
         setupAct.triggered.connect(self.setupDatabase)
 
-        
-        
+
+        #help
+        helpMenu = topMenu.addMenu("Help")
+        openHelpAct = helpMenu.addAction('Open help (in your default web browser)')
+        openHelpAct.triggered.connect(self.openHelp)
+
+
     def connect(self):
         db=database_dialog(self).exec_()
         try:
-            self.dd=site_cat_dd(db)
+            self.dd = site_cat_dd(db)
             self.setup_jc()
             self.note_edit.textChanged.connect(lambda note:self.dd.set_note(self.ch_tool.current_sec(),note))#will these signals stay connected if  db changed? move to init and add if?
             self.one_way_box.stateChanged.connect(lambda:self.dd.set_one_way(self.ch_tool.current_sec(),self.one_way_box.isChecked()))
@@ -79,12 +79,22 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
             #self.setup_op()
             self.dd.sql('set search_path to categorizing,public;')
             self.setWindowTitle(self.dd.db_name()+' - site categorizer')
-            
+            self.connectCategories()
             
         except Exception as e:
             iface.messageBar().pushMessage("could not connect to database. %s"%(str(e)),duration=4)
-            self.database_label.setText('Not Connected')            
+            self.setWindowTitle('not connected - site categorizer')           
             self.dd=None
+
+
+
+    def connectCategories(self):
+        self.policyModel = QSqlTableModel(db=self.dd.db)
+        self.policyView.setModel(self.policyModel)
+        self.policyModel.setTable('categorizing.categories')
+        self.policyModel.setEditStrategy(QSqlTableModel.OnFieldChange)   
+        self.policyModel.setSort(self.policyModel.fieldIndex('pos'),Qt.AscendingOrder)
+        self.policyModel.select()
 
 
 #when is this called?   
@@ -149,13 +159,11 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 
         if self.dd:
             self.dd.add_to_jc(sec,self.ch_tool.current_ch(),self.cat_combo.currentText())
-            self.update_section()
-            
+            self.dd.process_section(sec)
+            self.jc_model.select()
         else:
-            #self.con.sql("select add_to_jc(%s,%s,%s) ",[sec,self.ch_tool.current_ch(),self.cat_combo.currentText()])
-            self.dd.add_to_jc(sec,self.ch_tool.current_ch(),self.cat_combo.currentText())
-            self.update_section()
-        
+            iface.messageBar().pushMessage("site_categoriser: not connected to database.",duration=4)
+            
 
     def remove(self):
         rows = []
@@ -181,11 +189,6 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         layer.dataProvider().forceReload()
         layer.triggerRepaint()
 
-
-    def update_section(self):
-        self.dd.process_section(self.ch_tool.current_sec())#
-        self.jc_model.select()
-        
 
     def setupDatabase(self):
         msgBox=QMessageBox();

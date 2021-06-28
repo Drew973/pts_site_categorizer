@@ -23,11 +23,19 @@
         <title>Database Setup</title>
     </head>
     <body>
-        <p>The "prepare new database" button creates the schema,tables,views and functions required by this plugin.
-		These are in the categorizing schema.<p>
 
-		<p>		Values will need to be inserted into table <a href="network.html">network</a> before use.
-		If using gradients and/or curvatures these should be inserted into table <a href="other_events.html">other_events</a><p>
+		<h3> Connecting to Database:</h3>
+		<p> Connect plugin to a database through Database,"Connect to Database..."</p>
+
+		<h3> Setting up Existing Database for site categories</h3>
+
+		To set up an existing database for this plugin:
+		<li>Connect to it as previously</li>
+		<li>Click Database,"Setup Database for site categories..." .This creates a schema named 'categorizing' that will contain everything required by the plugin.</li>
+		<li>Insert values into the <a href="network.html">network table</a>.  </li>
+		<li>Insert values into the <a href="categories.html"> categories table</a>. </li>
+		<li>If using gradients and/or curvatures  insert these into the <a href="other_events.html">other_events table</a>. </li>
+		
 	</body>
 
 </div>

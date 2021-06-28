@@ -3,7 +3,7 @@ import os
 
 
 
-#copys everything except .git ,__pycache__ folders and .pyc extention in folder to zip file zip_name
+#copies everything in folder except (.git ,__pycache__ folders and .pyc extention) to zip file zip_name
 
 
 #need filenames 1st otherwise looping through zip?
@@ -11,7 +11,7 @@ def package(folder,zip_name=None,exclude_ext=['.pyc','.zip']):
 
     if not zip_name:
         zip_name =os.path.basename(folder)+'.zip'
-        
+        print(zip_name)
 
 
     files=[]
@@ -28,12 +28,18 @@ def package(folder,zip_name=None,exclude_ext=['.pyc','.zip']):
                     files.append(os.path.relpath(filePath,folder))
     
     
+    
+    folder_name = os.path.splitext(zip_name)[0]
+    print(folder_name)
+    
     with ZipFile(zip_name, 'w') as z:
         for f in files:
-            z.write(f)
+            z.write(f,os.path.join(folder_name,f))
             print(f)
 
 
 
 if __name__ == "__main__":
     package(os.getcwd())
+
+

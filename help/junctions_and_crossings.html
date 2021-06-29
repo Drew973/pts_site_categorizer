@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>  
+ <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>  
+
+<title>Junctions and crossings</title>
+
+<body>
+
+<div class="navbar_div">
+	<iframe src="navbar.html?parent=junctions_and_crossings.html" class="navbar_iframe" name="contents" >
+	<p>Your browser does not seem to support iframes.</p>
+	</iframe>
+<div>
+
+
+
+<div class="main_div">
+    <body>
+		<h4 id="junctions_and_crossings">Input Junctions and Crossings</h4>
+			<p> Junctions and crossings can be added at the selected section and chainage by selecting the category and clicking 'add'.<p>
+			<p> Junctions and crossings are in table <a href="jc.html">categorizing.jc</a>.Importing this into QGIS can be helpful  <p>
+			<p> Altering the junctions and crossings table will automatically update the categories (in <a href="op.html">categorizing.op</a> ).<p>
+			
+
+		<h5 id="before_after">Before and After Section:</h5>
+			<p> Sometimes sections can contain the approach to a junction/crossing that is before or after the section.<p>
+			<p> Add junctions <50m after the end of a section with a chainage>section length.These will affect site categories for the forward direction.<p>
+			<p> Add junctions <50m before the start of a section with a negative chainage.These will affect site categories for the reverse direction.<p>
+
+
+		<figure>
+			<img src="examples/junction_after.png" alt="junction after section"width="500" height="500">
+		<figcaption>Example:Junction 41m after end of section should be added with chainage of section length+41m</figcaption>  
+		</figure>  
+
+    </body>
+</html>
+
+</div>
+
+</html>

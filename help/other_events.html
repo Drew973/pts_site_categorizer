@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>  
+ <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>  
+
+<title>other_events</title>
+
+<body>
+
+<div class="navbar_div">
+	<iframe src="navbar.html?parent=other_events.html" class="navbar_iframe" name="contents" >
+	<p>Your browser does not seem to support iframes.</p>
+	</iframe>
+<div>
+
+
+
+<div class="main_div">
+    <head>
+        <title>Database Setup</title>
+    </head>
+    <body>
+        <h3 id="other_events">other_events</h3>
+
+	<p>Table containing events. Intended for curvature and gradient events. Events from junctions and crossings should be in jc rather than here.<p>
+		<ul>
+		<li>sec = section label. Must exist in network.</li>
+		<li>reversed=True where in opposite direction to section.</li>
+		<li>category=category of piece</li>
+		<li>s_ch=start chainage of event. In direction of section.</li>
+		<li>e_ch=end chainage of event. In direction of section.</li>
+		</ul>
+		<p> Created as:<p>
+		<object data="../database/tables/other_events.sql" type="text/plain" typemustmatch="" width="500" style="height: 300px"></object>
+
+    </body>
+
+</div>
+
+</html>

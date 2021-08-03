@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+ <!--highlighting current page would be nice but probabaly not worth it. -->
+
+<style>
+
+.sidenav {
+	height: 100%;
+	width: 300px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #b9d9eb;
+	overflow-x: hidden;
+	padding-top: 20px;
+	font-size: 25px;
+	list-style-type: none;
+
+}
+
+.sidenav a {
+  padding:  6px 6px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.active {
+    color:            #ffff00;
+    background-color: #00ff00;
+}
+</style>
+
+
+<div class="sidenav">
+<body>
+	<h><b>Site Categorizer Guide:</b><h>
+	<nav id=nav>
+	  <ul style="list-style-type: none;margin-left: 0,padding-left: 0">
+		<li><p>	<a href="overview.html" target="_parent">Overview</a><p></li>
+		<li><a href="connect_and_setup.html" target="_parent">Connect and Setup Database </a></li>
+		<li><a href="select_section.html" target="_parent">Selecting Section and Chainage</a></li>
+		<li><a href="junctions_and_crossings.html" target="_parent">Editing Junctions and Crossings</a></li>
+		
+		</ul>
+		
+		Tables:<ul> 
+		<li><a href="network.html" target="_parent">network</a></li>
+		<li><a href="categories.html" target="_parent">categories </a></li>
+		<li><a href="other_events.html" target="_parent">other_events</a></li>
+		<li><a href="jc.html" target="_parent">jc</a></li>
+		<li><a href="op.html" target="_parent">op</a></li>
+
+	  </ul>
+	</nav>
+
+
+  <script>
+//this gets called every time page containing iframe loaded
+//no messages appear for errors. use debugger.
+	//var urlParams = new URLSearchParams(window.location.search);
+	//console.log(urlParams.get('parent'))//set parent GET parameter/query string in src of iframe
+
+
+	//console.log(new URLSearchParams(window.location.search).get('parent'))//set parent GET parameter/query string in src of iframe
+
+//'parent' parameter is passed from parent page
+	function getParent()
+		{
+		//return new URLSearchParams(window.location.search).get('parent');
+		t=new URLSearchParams(window.location.search).get('parent')
+		//return new URL(t).href
+		var link = document.createElement("a");
+		link.href = t
+		return link.href
+	}
+
+
+	links = document.getElementById("nav").getElementsByTagName('a')
+	console.log(links)
+
+	parent=getParent()
+	console.log(parent)
+
+	for (i = 0; i < links.length; i++) 
+		{
+		//console.log(links[i].href)
+		//console.log(links[i].href===parent)
+		if (links[i].href===parent)
+			{
+			links[i].className='active'
+			}
+		}
+
+
+  </script>
+
+</body>
+<div>
+
+
+

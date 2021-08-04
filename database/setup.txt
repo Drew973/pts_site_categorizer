@@ -1,7 +1,6 @@
 create schema if not exists categorizing;
 set search_path to categorizing,public;
 create extension if not exists postgis;
-types/types.sql;
 tables/categories.sql;
 tables/network.sql;
 tables/other_events.sql;

@@ -6,20 +6,16 @@ from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMen
 
 #from . import marker
 from .sec_ch_widget import sec_ch_widget
-from.site_cat_dd import site_cat_dd
 from qgis.utils import iface
 from qgis.PyQt.QtSql import QSqlTableModel
 from PyQt5.QtGui import QDesktopServices
-from .database_dialog.database_dialog import database_dialog
+#from .database_dialog.database_dialog import database_dialog
 
-
-
-from . import networkModel,jcModel,delegates,databaseFunctions
+from . import networkModel,jcModel,delegates,databaseFunctions,databaseDialog
 
 
 uiPath=os.path.join(os.path.dirname(__file__), 'site_categorizer_dockwidget_base.ui')
 FORM_CLASS, _ = uic.loadUiType(uiPath)
-
 
 jcCats = ['Q1','Q2','Q3','K']
 
@@ -31,19 +27,23 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
     def __init__(self, parent=None):
         super(site_categoriserDockWidget, self).__init__(parent)
         self.setupUi(self)
-        self.add_button.clicked.connect(self.add)
-
-        self.dd=None#database_interface subclass
+        self.addButton.clicked.connect(self.add)
         
-        self.ch_tool=sec_ch_widget.sec_ch_widget(self)
-        self.main_widget.layout().insertWidget(0,self.ch_tool)
+        self.secChTool = sec_ch_widget.sec_ch_widget(self)
+        self.main_widget.layout().insertWidget(0,self.secChTool)
 
-        self.ch_tool.sec_changed.connect(self.secChanged)
-        self.init_jc_menu()      
-        self.initTopMenu()
-        self.setWindowTitle('not connected - site categorizer')
+        self.secChTool.sec_changed.connect(self.secChanged)
+        self.initJcMenu()      
+        
         self.networkModel = None
+        self.jcModel = None
+        
         self.addBox.addItems(jcCats)
+
+        self.connectDialog = databaseDialog.databaseDialog(parent=self,name='hsrr_processor_database')
+        self.connectDialog.accepted.connect(self.connect)
+        self.initTopMenu()
+        self.disconnected()
 
 
     def initTopMenu(self):
@@ -53,9 +53,9 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         #database
         databaseMenu = topMenu.addMenu("Database")
         connectAct = databaseMenu.addAction('Connect to Database...')
-        connectAct.triggered.connect(self.connect)
-        setupAct = databaseMenu.addAction('Setup Database for site categories...')
-        setupAct.triggered.connect(self.setupDatabase)
+        connectAct.triggered.connect(self.connectDialog.show)
+        self.setupAct = databaseMenu.addAction('Setup Database for site categories...')
+        self.setupAct.triggered.connect(self.setupDatabase)
         
         #help
         helpMenu = topMenu.addMenu("Help")
@@ -65,36 +65,44 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 
 
     def connect(self):
-        db=database_dialog(self).exec_()
+
+        db = self.connectDialog.getDb()
+
+        if not db.isOpen():
+            db.open()
         
-        try:
-            self.dd = site_cat_dd(db)
+        #these work with closed/invalid database.            
+        self.connectCategories(db)
+        self.connectNetwork(db)
+        self.connectJc(db)
             
-            self.dd.sql('set search_path to categorizing,public;')
-            self.setWindowTitle(db.databaseName()+' - site categorizer')
-            self.connectCategories(db)
-            
-            self.networkModel = networkModel.networkModel(db=db,parent=self)
-            self.setupJc(db)
-            
-            
-            
-            self.mapper = QDataWidgetMapper(self)
-            self.mapper.setModel(self.networkModel)
-            
-            self.mapper.addMapping(self.one_way_box,self.networkModel.fieldIndex('one_way'))
-            self.mapper.addMapping(self.note_edit,self.networkModel.fieldIndex('note'))
-            self.mapper.addMapping(self.checked_box,self.networkModel.fieldIndex('checked'))
-            
-    
-            
-            
-        except Exception as e:
-            iface.messageBar().pushMessage("could not connect to database. %s"%(str(e)),duration=4)
-            self.setWindowTitle('not connected - site categorizer')           
-            self.dd = None
+        if db.isOpen():#connected        
+            self.setWindowTitle(db.databaseName()+' - site categorizer')       
+            self.setupAct.setEnabled(True)
+            self.addButton.setEnabled(True)
+                    
+        else:        
+            iface.messageBar().pushMessage('site categorizer: could not connect to database',duration=4)
+            self.disconnected()
 
+            
+     
+    def disconnected(self):
+        self.setWindowTitle('Not connected - site categorizer')
+        self.setupAct.setEnabled(False)
+        self.addButton.setEnabled(False)
+     
 
+    def connectNetwork(self,db):
+        self.networkModel = networkModel.networkModel(db=db,parent=self)
+        self.mapper = QDataWidgetMapper(self)
+        self.mapper.setModel(self.networkModel)
+        self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
+        
+        self.mapper.addMapping(self.one_way_box,self.networkModel.fieldIndex('one_way'))
+        self.mapper.addMapping(self.note_edit,self.networkModel.fieldIndex('note'))
+        self.mapper.addMapping(self.checked_box,self.networkModel.fieldIndex('checked'))
+            
 
     def connectCategories(self,db):
         self.policyModel = QSqlTableModel(db=db)
@@ -107,11 +115,8 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 
 #when is this called?   
     def closeEvent(self, event):
-        print('closing plugin')
-        if self.dd:
-            self.dd.disconnect()
-            
-        del self.ch_tool
+        print('closing plugin')            
+        del self.secChTool
 
         self.closingPlugin.emit()
         event.accept()
@@ -120,72 +125,65 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
         
 #opens help/index.html in default browser
     def openHelp(self):
-        help_path=os.path.join(os.path.dirname(__file__),'help','overview.html')
-        help_path='file:///'+os.path.abspath(help_path)
+        help_path = os.path.join(os.path.dirname(__file__),'help','overview.html')
+        help_path = 'file:///'+os.path.abspath(help_path)
         QDesktopServices.openUrl(QUrl(help_path))
 
         
-    def setupJc(self,db):
-        self.jc_model = jcModel.jcModel(parent=self,db=db)
-        self.jc_view.setModel(self.jc_model)
-        self.jc_view.hideColumn(self.jc_model.fieldIndex('geom'))
-        self.jc_view.hideColumn(self.jc_model.fieldIndex('pk'))
-        self.jc_model.dataChanged.connect(lambda:self.jc_model.process_section(sec=self.ch_tool.current_sec()))#reprocess section when jc table changed.
+    def connectJc(self,db):
+        self.jcModel = jcModel.jcModel(parent=self,db=db)
+        self.jcView.setModel(self.jcModel)
+        self.jcView.hideColumn(self.jcModel.fieldIndex('geom'))
+        self.jcView.hideColumn(self.jcModel.fieldIndex('pk'))
+        self.jcModel.dataChanged.connect(lambda:self.jcModel.process(sec=self.secChTool.current_sec()))#reprocess section when jc table changed.
         
-        self.jc_view.setItemDelegateForColumn(self.jc_model.fieldIndex('category'),delegates.comboboxDelegate(self,items=jcCats))
+        self.jcView.setItemDelegateForColumn(self.jcModel.fieldIndex('category'),delegates.comboboxDelegate(self,items=jcCats))
         
-        if self.ch_tool.current_sec():
-            self.secChanged(self.ch_tool.current_sec())
+        if self.secChTool.current_sec():
+            self.secChanged(self.secChTool.current_sec())
        
         
+       
+        
+#find in network table. set mapper to row.
+
+       
     def secChanged(self,sec):
         
         print(sec)
         
-        if self.networkModel:#connected if this not None
+        if self.jcModel:
+            self.jcModel.setFilter("sec='%s'"%(sec))
+            self.jcModel.select()
+            
+            
         
-            self.jc_model.setFilter("sec='%s'"%(sec))
-            self.jc_model.select()
+        if self.networkModel:
         
-            row = self.networkModel.find(self.networkModel.fieldIndex('sec'),sec)
-        
-            if row:
-                self.mapper.setCurrentIndex(row)
-            else:
-                iface.messageBar().pushMessage('site categorizer: section %s not found in database'%(sec),duration=4)
+            if self.networkModel.database().isOpen():
+                row = self.networkModel.find(self.networkModel.fieldIndex('sec'),sec)
                 
-  
-        else:
-            iface.messageBar().pushMessage('site categorizer: not connected to database',duration=4)
-
+                if row is None:#if not is true for 0
+                    iface.messageBar().pushMessage('site categorizer: section %s not found in network table'%(sec),duration=5)
+                else:
+                    self.mapper.setCurrentIndex(row)
+                
+            else:
+                iface.messageBar().pushMessage('site categorizer: not connected to database',duration=5)
+                
 
        
     def add(self):
         sec = self.getSec()
-        if sec and self.jc_model:
-            self.jc_model.add(sec,self.ch_tool.current_ch(),self.addBox.currentText())
+        if sec and self.jcModel:
+            self.jcModel.add(sec,self.secChTool.current_ch(),self.addBox.currentText())
            
         
     def getSec(self):
-        sec=self.ch_tool.current_sec()
+        sec=self.secChTool.current_sec()
         if sec:
             return sec
         iface.messageBar().pushMessage("site_categorizer: select a valid section before adding events.",duration=4)
-
-
-    def processSec(self):
-        sec = self.getSec()
-        dd = self.getDbInterface()
-        if sec and dd:
-            dd.process_section(sec)
-            self.jc_model.select()
-    
-    
-    def processAll(self):
-        dd = self.getDbInterface()
-        if dd:
-            dd.process_all()
-            self.jc_model.select()
     
     
     def remove(self):
@@ -194,15 +192,15 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
             rows.append(index.row())
         rows.sort(reverse=True)
         for row in rows:
-            self.jc_view.model().removeRow(row, self.jc_view.rootIndex())
+            self.jcView.model().removeRow(row, self.jcView.rootIndex())
 
-        self.jc_view.model().select()
+        self.jcView.model().select()
         
         
         
-#sets ch of sec_ch widget to minimum chainage of selected rows of jc_view
-    def set_ch(self):
-        self.ch_tool.set_ch(min([i.sibling(i.row(),1).data() for i in self.jc_view.selectedIndexes()]))
+#sets ch of sec_ch widget to minimum chainage of selected rows of jcView
+    def setCh(self):
+        self.secChTool.set_ch(min([i.sibling(i.row(),1).data() for i in self.jcView.selectedIndexes()]))
         
 
     def layer_set(self):
@@ -218,43 +216,31 @@ class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 
     def setupDatabase(self):
         msgBox=QMessageBox();
-        msgBox.setText("Perform first time database setup.")
-        msgBox.setInformativeText("Continue?")
+        msgBox.setText("Perform first time database setup?")
+       # msgBox.setInformativeText("Continue?")
         msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         msgBox.setDefaultButton(QMessageBox.No)
         i = msgBox.exec_()
+        
         if i==QMessageBox.Yes:
-            #self.dd.setup()
             folder = os.path.join(os.path.dirname(__file__),'database')
             file = os.path.join(folder,'setup.txt')
             
-            
-            with databaseFunctions.dbToCon(self.dd.db) as con:
-                databaseFunctions.runSetupFile(cur=con.cursor(),file=file,folder=folder,printCom=True)
+            with self.connectDialog.getCon() as con:
+                databaseFunctions.runSetupFile(cur=con.cursor(),file=file,printCom=True,recursive=False)
                 
             iface.messageBar().pushMessage("site_categoriser: prepared database",duration=4)
 
 
 #for requested view
-    def init_jc_menu(self):
+    def initJcMenu(self):
         self.jc_menu = QMenu()
-        drop_act=self.jc_menu.addAction('drop selected rows')
+        drop_act = self.jc_menu.addAction('drop selected rows')
         drop_act.triggered.connect(self.remove)
 
-        set_ch_act=self.jc_menu.addAction('set chainage from selected rows.')
-        set_ch_act.triggered.connect(self.set_ch)
+        setChAct = self.jc_menu.addAction('set chainage from selected rows.')
+        setChAct.triggered.connect(self.setCh)
 
-        self.jc_view.setContextMenuPolicy(Qt.CustomContextMenu);
-        #self.jc_view.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.mapToGlobal(pt)))
-        self.jc_view.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.jc_view.mapToGlobal(pt)))
-
-        
-
-
-
-
-
-
-
-
-        
+        self.jcView.setContextMenuPolicy(Qt.CustomContextMenu);
+        #self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.mapToGlobal(pt)))
+        self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.jcView.mapToGlobal(pt)))

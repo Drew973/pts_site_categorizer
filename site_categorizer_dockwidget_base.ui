@@ -79,7 +79,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="add_button">
+              <widget class="QPushButton" name="addButton">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add junction or crossing with selected section,chainage and category.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -91,7 +91,7 @@
             </layout>
            </item>
            <item>
-            <widget class="QTableView" name="jc_view">
+            <widget class="QTableView" name="jcView">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Junctions and crossings table. right click on rows for options. &lt;/p&gt;&lt;p&gt;&amp;lt;50m before section should be added with negative chainage. &lt;/p&gt;&lt;p&gt;&amp;lt;50m after section with chainage&amp;gt;section length.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>

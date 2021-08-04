@@ -28,7 +28,9 @@ def dbToCon(db):
  
  
  
-def runSetupFile(cur,file,printCom=False):
+ 
+ #functions can have ; part way through
+def runSetupFile(cur,file,printCom=False,recursive=True):
     
     folder = os.path.dirname(file) 
     
@@ -42,15 +44,18 @@ def runSetupFile(cur,file,printCom=False):
                     print(com)
                 
                 if os.path.exists(f):
-                    #runScript(con,f)
-                    runSetupFile(cur,f,printCom)
+                    if recursive:
+                       runSetupFile(cur,f,printCom) 
+                    else:
+                        runScript(cur,f)
+                    
                 else:
                     if com:
                         cur.execute(com) 
  
     
  
-def runScript(con,script,args={}):
+def runScript(cur,script,args={}):
         s = script
         
         if os.path.dirname(script)=='':
@@ -58,8 +63,8 @@ def runScript(con,script,args={}):
     
         with open(s,'r') as f:
             if args:
-                con.cursor().execute(f.read(),args)
+                cur.execute(f.read(),args)
             else:
-                con.cursor().execute(f.read())
+                cur.execute(f.read())
                 
           

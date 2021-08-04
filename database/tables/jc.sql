@@ -3,8 +3,6 @@
 set search_path to categorizing,public;
 
 
-drop table if exists jc;
-
 create table if not exists jc
 
 (

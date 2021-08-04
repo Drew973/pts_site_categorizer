@@ -7,7 +7,7 @@ import os
 
 
 #need filenames 1st otherwise looping through zip?
-def package(folder,zip_name=None,exclude_ext=['.pyc','.zip']):
+def package(folder,zip_name=None,exclude_ext=['.pyc','.zip','.gitignore']):
 
     if not zip_name:
         zip_name =os.path.basename(folder)+'.zip'

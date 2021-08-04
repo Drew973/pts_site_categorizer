@@ -36,17 +36,16 @@
 		<li>Insert values into the <a href="network.html">network table</a>.  </li>
 		<li>Insert values into the <a href="categories.html"> categories table</a>. </li>
 		<li>If using gradients and/or curvatures  insert these into the <a href="other_events.html">other_events table</a>. </li>
-		<li>If irl depends on more than site category rewrite the irl function.</li>
+		<li>Rewrite the irl function if irl should depend on section label.</li>
 		<li>Process all sections with 'select categorizing.process(sec) from categorizing.network'.</li>
-		<li>Plugin is now ready to use. The plugin will update the <a href="op.html"> op table</a> when <a href="junctions_and_crossings.html"> editing junctions and crossings</a>. </li>
+		<li>Plugin is now ready to use. The plugin will update the <a href="op.html"> op table</a> after <a href="junctions_and_crossings.html"> editing junctions and crossings</a>. </li>
 		</ol>
 
-
 	
-	<h4 id="irl function">The irl function:</h4>
-	<p> When processing sections the database uses the irl(ct text,sect text) function to calculate irl given category ct and section label sect. </p>
+	<h4 id="irl function">Rewriting the irl function:</h4>
+	<p> The irl(ct text,sect text) function calculates irl of an event given category ct and section label sect. </p>
 	<p> The default implementation of this function looks up the irl value for ct from the categories table. </p>
-	<p> The function will need replacing if irl depends on section as well as site category. </p>
+	<p> It will need rewriting if irl depends on section label as well as site category. </p>
 
 	<p> It was created as: </p>
 

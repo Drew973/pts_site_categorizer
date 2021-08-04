@@ -7,8 +7,8 @@ class networkModel(QSqlTableModel):
     def __init__(self,db,parent=None):
         super(networkModel,self).__init__(db=db,parent=parent)
         self.setTable('categorizing.network')
+        self.setEditStrategy(QSqlTableModel.OnFieldChange)
         self.select()
-        
 
         
 #returns 1st row where col=val

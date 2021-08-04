@@ -1,3 +1,17 @@
+
+rethink runSetupFile. ; can be partway through some commands
+is only problem in categories.sql?
+
+query from last ; to
+
+avoid with
+if categoriesModel.rowcount()=0:
+	runScript()
+
+
+
+
+
 user defines get_events(sect varchar,rev bool) function.
 returns table of events with s_ch int,e_ch int,category categorizing.cat,irl float
 start chainage,end chainage,category,irl

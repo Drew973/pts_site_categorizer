@@ -1,0 +1,17 @@
+.main_div {
+	margin-left: 310px
+}
+
+
+.navbar_div {
+height=1000px;
+}
+
+
+.navbar_iframe {
+border:1px solid black;
+position:fixed;
+height=1000px;
+min-height: 1000px;
+}
+

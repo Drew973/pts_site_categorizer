@@ -1,0 +1,43 @@
+
+rethink runSetupFile. ; can be partway through some commands
+is only problem in categories.sql?
+
+query from last ; to
+
+avoid with
+if categoriesModel.rowcount()=0:
+	runScript()
+
+
+
+
+
+user defines get_events(sect varchar,rev bool) function.
+returns table of events with s_ch int,e_ch int,category categorizing.cat,irl float
+start chainage,end chainage,category,irl
+
+This function should use values in the jc table and other_events table and road_class from network.
+
+defines what site categories mean and what irl they should have
+
+
+
+get_irl(sect text,ct text) function
+	lookup irl from categories
+	easy to rewrite if irl depends on stuff besides category
+
+
+geom should be in direction of section when reversed.
+
+
+plugin can limit what categories can be entered. Currently only K,Q1,Q2,Q3
+foreign key on jc references categories(cat) can also do this
+
+foreign key on other_events references categories(cat)
+fk on op references categories(cat)
+
+
+
+sec_ch marker not removed when map tool removed from canvas
+
+

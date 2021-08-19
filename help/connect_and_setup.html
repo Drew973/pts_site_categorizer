@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>  
+ <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>  
+
+<title>database setup</title>
+
+<body>
+
+<div class="navbar_div">
+	<iframe src="navbar.html?parent=connect_and_setup.html" class="navbar_iframe" name="contents" >
+	<p>Your browser does not seem to support iframes.</p>
+	</iframe>
+<div>
+
+
+
+<div class="main_div">
+    <head>
+        <title>Database Setup</title>
+    </head>
+    <body>
+
+		<h3> Connecting to Database:</h3>
+		<p> Connect plugin to a database through Database,"Connect to Database..."</p>
+
+		<h3> Setting up Existing Database for site categories</h3>
+
+		To set up an existing database for this plugin:
+		<ol>
+		<li>Connect to it as previously</li>
+		<li>Click Database,"Setup Database for site categories..." .This creates a schema named 'categorizing' that will contain everything required by the plugin.</li>
+		<li>Insert values into the <a href="network.html">network table</a>.  </li>
+		<li>Insert values into the <a href="categories.html"> categories table</a>. </li>
+		<li>If using gradients and/or curvatures  insert these into the <a href="other_events.html">other_events table</a>. </li>
+		<li>Rewrite the irl function if irl should depend on section label.</li>
+		<li>Process all sections with 'select categorizing.process(sec) from categorizing.network'.</li>
+		<li>Plugin is now ready to use. The plugin will update the <a href="op.html"> op table</a> after <a href="junctions_and_crossings.html"> editing junctions and crossings</a>. </li>
+		</ol>
+
+	
+	<h4 id="irl function">Rewriting the irl function:</h4>
+	<p> The irl(ct text,sect text) function calculates irl of an event given category ct and section label sect. </p>
+	<p> The default implementation of this function looks up the irl value for ct from the categories table. </p>
+	<p> It will need rewriting if irl depends on section label as well as site category. </p>
+
+	<p> It was created as: </p>
+
+	<object data="../database/functions/irl.sql" type="text/plain" typemustmatch="" width="800" style="height: 500px"></object>
+
+    </body>
+
+
+
+</body>
+</div>
+
+</html>
+
+
+
+
+
+
+
+
+

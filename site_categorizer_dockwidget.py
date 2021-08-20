@@ -1,11 +1,11 @@
 #from  qgis.PyQt import uic
-from qgis.PyQt.QtCore import pyqtSignal,Qt,QSettings,QUrl
+from qgis.PyQt.QtCore import pyqtSignal,Qt,QUrl
 import os
 
 from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar
 
 #from . import marker
-from .sec_ch_widget import sec_ch_widget
+#from .sec_ch_widget import sec_ch_widget
 from qgis.utils import iface
 from qgis.PyQt.QtSql import QSqlTableModel
 from PyQt5.QtGui import QDesktopServices
@@ -17,7 +17,7 @@ from .site_categorizer_dockwidget_base import Ui_site_categoriserDockWidgetBase
 
 
 
-from secCh import secChWidget
+#from secCh import secChWidget
 
 #uiPath=os.path.join(os.path.dirname(__file__), 'site_categorizer_dockwidget_base.ui')
 #FORM_CLASS, _ = uic.loadUiType(uiPath)
@@ -37,8 +37,8 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.setupUi(self)
         
         
-        self.secChTool = secChWidget.secChWidget(self)
-        self.main_widget.layout().insertWidget(0,self.secChTool)
+        #self.secChTool = secChWidget.secChWidget(self)
+        #self.main_widget.layout().insertWidget(0,self.secChTool)
 
         #self.secChTool.sec_changed.connect(self.secChanged)
 
@@ -47,21 +47,32 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.jcModel = None
         self.otherEventsModel = None
         
+        
         self.addBox.addItems(jcCats)
 
-        self.initJcMenu()
-        self.initOtherEventsMenu()
         
         self.connectDialog = databaseDialog.databaseDialog(parent=self,name='site_categorizer_database')
         self.connectDialog.accepted.connect(self.connect)
+        
         self.initTopMenu()
+        self.initJcMenu()
+        self.initOtherEventsMenu()
+        
+        
+        self.connectionDependent = [self.setupAct,self.addJcButton,self.secWidget,self.otherEventsAddButton,self.oneWayBox,self.noteEdit,self.checkedBox,self.addBox]
         self.disconnected()
         self.otherEventsAddButton.clicked.connect(self.addOtherEvent)        
         
-        self.secChTool.secWidget.currentIndexChanged.connect(self.mapper.setCurrentIndex)#networkModel for both mapper and secWidget
+        self.secWidget.currentIndexChanged.connect(self.mapper.setCurrentIndex)#networkModel for both mapper and secWidget
         
-       # self.addButton.clicked.connect(self.add)
-        self.secChTool.secWidget.valueChanged.connect(self.changeSec)
+        self.addJcButton.clicked.connect(self.addJc)
+        self.secWidget.valueChanged.connect(self.changeSec)
+        self.secWidget.currentIndexChanged.connect(self.chWidget.setRow)
+        
+        self.chWidget.setExcess(50)
+        
+        
+        
         
 
     def changeSec(self,sec):
@@ -77,7 +88,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
     def initTopMenu(self):
         topMenu = QMenuBar()
-        self.main_widget.layout().setMenuBar(topMenu)
+        self.frame.layout().setMenuBar(topMenu)
         
         #database
         databaseMenu = topMenu.addMenu("Database")
@@ -109,8 +120,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         if db.isOpen():#connected        
             self.setWindowTitle(db.databaseName()+' - site categorizer')       
-            self.setupAct.setEnabled(True)
-            self.addButton.setEnabled(True)
+            for w in self.connectionDependent:
+                w.setEnabled(True)
+           # self.secWidget.setEnabled(True)
         
    
                     
@@ -122,22 +134,25 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
      
     def disconnected(self):
         self.setWindowTitle('Not connected - site categorizer')
-        self.setupAct.setEnabled(False)
-        self.addButton.setEnabled(False)
-     
+        for w in self.connectionDependent:
+            w.setEnabled(False)
+
 
     def connectNetwork(self,db):
         self.networkModel = networkModel.networkModel(db=db,parent=self)
         
-        self.secChTool.secWidget.setModel(self.networkModel)
-        self.secChTool.secWidget.setModelColumn(self.networkModel.fieldIndex('sec'))
+        self.secWidget.setModel(self.networkModel)
+        self.secWidget.setDisplayColumn(self.networkModel.fieldIndex('sec'))
+        self.secWidget.setModelPKColumn(self.networkModel.fieldIndex('sec'))
+        
+        self.chWidget.setModel(self.networkModel)
         
         self.mapper.setModel(self.networkModel)
         self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
         
-        self.mapper.addMapping(self.one_way_box,self.networkModel.fieldIndex('one_way'))
-        self.mapper.addMapping(self.note_edit,self.networkModel.fieldIndex('note'))
-        self.mapper.addMapping(self.checked_box,self.networkModel.fieldIndex('checked'))
+        self.mapper.addMapping(self.oneWayBox,self.networkModel.fieldIndex('one_way'))
+        self.mapper.addMapping(self.noteEdit,self.networkModel.fieldIndex('note'))
+        self.mapper.addMapping(self.checkedBox,self.networkModel.fieldIndex('checked'))
             
 
     def connectCategories(self,db):
@@ -174,7 +189,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 #called when plugin closed?
     def closeEvent(self, event):
         self.closingPlugin.emit()
-        del self.secChTool.chWidget.marker
+        self.chWidget.removeMarker()
         event.accept()
 
 
@@ -195,17 +210,18 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.jcView.setItemDelegateForColumn(self.jcModel.fieldIndex('category'),delegates.comboboxDelegate(self,items=jcCats))
 
        
-    def add(self):
+    def addJc(self):
         sec = self.getSec()
         if sec and self.jcModel:
-            self.jcModel.add(sec,self.secChTool.current_ch(),self.addBox.currentText())
+            self.jcModel.add(sec,self.chWidget.value(),self.addBox.currentText())
            
         
     def getSec(self):
-        sec = self.secChTool.current_sec()
-        if sec:
-            return sec
-        iface.messageBar().pushMessage("site_categorizer: select a valid section before adding events.",duration=4)
+        if not self.secWidget.model():
+            iface.messageBar().pushMessage("site_categorizer: not connected to database.",duration=4)
+        else:
+            return self.secWidget.getCurrentPK()
+
     
     
     def remove(self):

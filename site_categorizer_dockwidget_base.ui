@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>613</height>
+    <width>871</width>
+    <height>618</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <item>
         <widget class="QFrame" name="frame">
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
@@ -34,9 +34,19 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="sectionWidget" name="secWidget"/>
+            </item>
+            <item>
+             <widget class="chainageWidget" name="chWidget"/>
+            </item>
+           </layout>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QCheckBox" name="one_way_box">
+             <widget class="QCheckBox" name="oneWayBox">
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mark section as one way.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
@@ -46,19 +56,19 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checked_box">
+             <widget class="QLineEdit" name="noteEdit">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;note for section.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkedBox">
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mark section as checked.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Checked</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="note_edit">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;note for section.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
@@ -94,7 +104,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="addButton">
+                 <widget class="QPushButton" name="addJcButton">
                   <property name="toolTip">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add junction or crossing with selected section,chainage and category.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -163,6 +173,18 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>chainageWidget</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>chainageWidget</header>
+  </customwidget>
+  <customwidget>
+   <class>sectionWidget</class>
+   <extends>QComboBox</extends>
+   <header>sectionWidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

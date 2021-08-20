@@ -11,4 +11,5 @@ sec varchar primary key
 ,road_class text references categories(cat) on update cascade--default category for section. should be A,B,C or R
 ,note varchar
 ,checked bool
+,wkt text
 );

@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt,pyqtSignal
 
 #from . import searchableComboBox
 
-from qgis.core import QgsFeatureRequest,QgsFeature
+from qgis.core import QgsFeatureRequest
 from qgis.utils import iface
 
 
@@ -61,62 +61,90 @@ searchableComboBox for getting feature(s) given layer,field and value
 can attempt to set value from seleted features of layer.
 focus should try to select features on layer where field==value.?
 
-
-
-	map row of QabstractTableModel to feature. using
-	primary key of model and primary key of features.
+map row of QabstractTableModel to feature. using primary key of model and primary key of features.
 	
-	setModel(QabstractTableModel)
-	setDisplayColumn(int)
-	setModelPK(int)#primary key col of model
-	setLayerPK(str)#primary key field of layer.
+setModel(QabstractTableModel)
+setDisplayColumn(int)
+setModelPK(int)#primary key col of model
+setLayerPK(str)#primary key field of layer.
     
 
-    self.secChTool.secWidget.setModel(self.networkModel)
-    self.secChTool.secWidget.setModelColumn(self.networkModel.fieldIndex('sec'))
+self.secChTool.secWidget.setModel(self.networkModel)
+self.secChTool.secWidget.setModelColumn(self.networkModel.fieldIndex('sec'))
 '''
 
 
 class featureWidget(searchableComboBox):
     featureChanged = pyqtSignal(object)#any python object. qgs feature or None
     
-    def __init__(self,parent=None,prefix='',layer=None,field=None):
+    def __init__(self,parent=None,prefix='',layer=None,field=None,model=None,modelPKColumn=None):
         super(featureWidget,self).__init__(parent)
     
         self.prefix = prefix
         
         self.layer = layer#qgis gives has no attribute layer without this. because trying to emit getFeature.
         self.field = field
+        self.modelPKColumn = modelPKColumn
+        
+        self.menu = QMenu()
+        
+        setFromLayerAct = QAction('Set from layer',self)        
+        selectAct = QAction('Select on layer',self)
+        self.addAction(setFromLayerAct)
+        self.addAction(selectAct)        
+        
+        
+        self.menu.addAction(setFromLayerAct)
+        self.menu.addAction(selectAct)        
+        
         
         self.setLayer(layer)
         self.setField(field)
+        self.setModel(model)
 
-        setFromLayerAct = QAction('Set from layer',self)
+
         setFromLayerAct.triggered.connect(self.setFromLayer)
-        
-        selectAct = QAction('Select on layer',self)
         selectAct.triggered.connect(self.selectOnLayer)
         
-        self.addAction(setFromLayerAct)
-        self.addAction(selectAct)
-        
-        self.menu = QMenu()
-        self.menu.addAction(setFromLayerAct)
-        self.menu.addAction(selectAct)
-
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(lambda pt:self.menu.exec_(self.mapToGlobal(pt)))
         self.currentIndexChanged.connect(self.emitFeature)
 
 
+    #set column of model with primary key
+    def setModelPKColumn(self,col):
+        self.modelPKColumn = col
 
  
+    #set column of model to display
+    #col is int 
+    def setDisplayColumn(self,col):
+        super().setModelColumn(col)
+
+
+    def setModel(self,model):
+        super().setModel(model)
+        if model:
+            self.setEnabled(True)
+        else:
+            self.setEnabled(False)
+
+
+
+    def setEnabled(self,enabled):
+        super().setEnabled(enabled)
+        for a in self.actions():
+            print(a)
+            a.setEnabled(enabled)
+
+
 
     def setLayer(self,layer):
         self.layer = layer
         self.emitFeature()
 
 
+    #set field with primary key
     def setField(self,field):
         self.field = field
         self.emitFeature()
@@ -139,17 +167,29 @@ class featureWidget(searchableComboBox):
             return self.field
         
         if warn:
-            iface.messageBar().pushMessage('%s field not set'%(self.prefix),duration=4)
+            iface.messageBar().pushMessage('%s layer field not set'%(self.prefix),duration=4)
 
+
+
+    def getCurrentPK(self,warn):
+        if warn and not self.modelPKColumn:
+            iface.messageBar().pushMessage('%s model primary key column not set'%(self.prefix),duration=4)
+            return
+        
+        if self.currentIndex() and self.modelPKColumn:
+            return self.model().index(self.currentIndex(),self.modelPKColumn).data()
+        else:
+            if warn:
+                iface.messageBar().pushMessage('%s no item selected'%(self.prefix),duration=4)
+        
 
     #returns list of features.
     def getFeatures(self,warn=True):
-        data = self.itemText(self.currentIndex())
-        
+        data = self.getCurrentPK(warn)
         layer = self.getLayer(warn)
         field = self.getField(warn)
         
-        if layer and field:
+        if layer and field and data:
             e = '%s=%s '%(dq(field),sq(data))
             request = QgsFeatureRequest().setFilterExpression(e)
             return [f for f in layer.getFeatures(request)]
@@ -161,7 +201,7 @@ class featureWidget(searchableComboBox):
         f = self.getFeatures(warn)
         print(f)
  
-        if len(f)==0:
+        if not f:
             if warn:
                 iface.messageBar().pushMessage('%s no features found'%(self.prefix),duration=4)
             return

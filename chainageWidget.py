@@ -4,6 +4,10 @@ from PyQt5.QtGui import QColor
 from qgis.gui import QgsMapToolEmitPoint,QgsVertexMarker
 from qgis.utils import iface
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 '''
 spinbox that moves marker to chainage.Section given by row of model.
 independent of layers. uses model to get geometry.
@@ -32,15 +36,22 @@ class chainageWidget(QDoubleSpinBox):
         self.setSuffix('m')
         self.setDecimals(0)
         
-        self.valueChanged.connect(self.moveMarker)
         self.tool.canvasClicked.connect(self.setFromPoint)
-        
-
-    def moveMarker(self):
+      
+        self.focusCount = 1
+            
+            
+    #delegate will pass None whilst deleting row
+    def setValue(self,value):
+        if value is None:
+            value = 0
+            
         if self.model:
-            self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=self.value(),crs=iface.mapCanvas().mapSettings().destinationCrs()))
+            self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=value,crs=iface.mapCanvas().mapSettings().destinationCrs()))
             #canvas.mapRenderer().destinationCrs() in qgis 2
-            self.marker.show()
+            #markers work in map crs.          
+            
+        super().setValue(value)
             
     
     def setRow(self,row):
@@ -60,11 +71,17 @@ class chainageWidget(QDoubleSpinBox):
         
         
     def setFromPoint(self,point):
+        logger.info('setFromPoint(%s)'%(point))
         if self.model:
             self.setValue(self.model.pointToChainage(row=self.row,point=point,crs=iface.mapCanvas().mapSettings().destinationCrs()))
             #canvas.mapRenderer().destinationCrs() in qgis 2
     
+        self.focusCount = 1
+        
+        
+    
     def setModel(self,model):
+        logger.info('setModel(%s)'%(model))
         self.model = model
         self.setRow(0)
         
@@ -85,15 +102,8 @@ class chainageWidget(QDoubleSpinBox):
     def focusInEvent(self,event):
         self.activateTool()
         self.marker.show()
-
-
-    def removeMarker(self):
-        self.marker.hide()
-        
-
-    def focusOutEvent(self,event):
-        self.removeMarker()
-        
+        self.focusCount = 1
+            
         
     def setExcess(self,excess):
         self.excess = excess
@@ -101,7 +111,7 @@ class chainageWidget(QDoubleSpinBox):
         
 
    #this happens when widget closed
-    def closeEvent(self,event):
+    def closeEvent(self,event):        
         iface.mapCanvas().scene().removeItem(self.marker)
         self.tool.deactivate()
         event.accept()
@@ -110,7 +120,6 @@ class chainageWidget(QDoubleSpinBox):
     def __del__(self):
         iface.mapCanvas().scene().removeItem(self.marker)
         self.tool.deactivate()
-        super(chainageWidget,self).__del__()
 
 
 if __name__=='__console__':

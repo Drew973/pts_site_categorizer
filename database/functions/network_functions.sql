@@ -14,15 +14,8 @@ CREATE OR REPLACE FUNCTION invert_ch(ch float,sect varchar) RETURNS float AS
 'SELECT meas_len-ch from categorizing.network  where sec=sect' LANGUAGE sql IMMUTABLE;
 					   
 
-CREATE OR REPLACE FUNCTION ch_to_point(sect varchar,chainage float) 
-RETURNS geometry('point',27700) AS $$
-		declare 	
-			f float = chainage/meas_len from network where sec=sect;
-			geom geometry('linestring',27700) = geom from network where sec=sect;
-        BEGIN	
-			return ST_LineInterpolatePoint(geom,clamp(f,0,1));
-		END;			
-$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION ch_to_point(sect varchar,chainage float) RETURNS geometry('point',27700) AS
+'SELECT st_lineInterpolatePoint(geom,clamp(chainage/meas_len,0,1)) from network where sec=sect' LANGUAGE sql IMMUTABLE;
 
 
 alter function ch_to_point set search_path to categorizing,public;

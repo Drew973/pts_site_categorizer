@@ -6,6 +6,8 @@ from PyQt5.QtCore import Qt,pyqtSignal
 from qgis.core import QgsFeatureRequest
 from qgis.utils import iface
 
+import logging
+logger = logging.getLogger(__name__)
 
 def sq(s):
     return "'%s'"%(s)
@@ -123,6 +125,7 @@ class featureWidget(searchableComboBox):
 
 
     def setModel(self,model):
+        logger.info('setModel(%s)'%(str(model)))
         super().setModel(model)
         if model:
             self.setEnabled(True)
@@ -171,12 +174,13 @@ class featureWidget(searchableComboBox):
 
 
 
-    def getCurrentPK(self,warn):
-        if warn and not self.modelPKColumn:
-            iface.messageBar().pushMessage('%s model primary key column not set'%(self.prefix),duration=4)
+    def getCurrentPK(self,warn=True):
+        if self.modelPKColumn is None:
+            if warn:
+                iface.messageBar().pushMessage('%s model primary key column not set'%(self.prefix),duration=4)
             return
         
-        if self.currentIndex() and self.modelPKColumn:
+        if self.currentIndex():
             return self.model().index(self.currentIndex(),self.modelPKColumn).data()
         else:
             if warn:
@@ -215,12 +219,12 @@ class featureWidget(searchableComboBox):
             
 
     #attempt to select item on layer
-    def selectOnLayer(self):
+    def selectOnLayer(self,warn=True):
         print('select on layer')
         data = self.itemText(self.currentIndex())
         
-        layer = self.getLayer()
-        field = self.getField()
+        layer = self.getLayer(warn)
+        field = self.getField(warn)
         
         if layer and field:
             e = '%s=%s '%(dq(field),sq(data))

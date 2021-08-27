@@ -2,6 +2,9 @@ from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import Qt
 
 import psycopg2
+import curvatures
+import matplotlib.pyplot as plt
+
 
 
 def dbToCon(db):
@@ -44,3 +47,37 @@ class otherEventsModel(QSqlTableModel):
         with dbToCon(self.database()) as con:
             con.cursor().execute(q,(sec,rev,s_ch,e_ch,category))
         self.select()
+        
+        
+        
+    def autoCurvatures(self,row,networkModel,plot=False):
+        
+        speed = float(networkModel.get(row,'speed_limit'))
+        sec = networkModel.get(row,'sec')
+        length = networkModel.get(row,'meas_len')
+        geom = networkModel.geom(row)
+        geomLen = geom.length()
+        
+        if speed>=50:
+            pieces = curvatures.getPieces(geom,500)
+            print(pieces)
+            pieces = [p for p in pieces if not (p.length()<100 and p.min()>250)]
+            
+        else:
+            pieces = curvatures.getPieces(geom,100)
+
+        with dbToCon(self.database()) as con:
+            q='select categorizing.add_curvature(%(sec)s,%(start)s,%(end)s)'
+            con.cursor().executemany(q,[{'sec':sec,'start':length*p.start/geomLen,'end':length*p.end/geomLen} for p in pieces])   
+            
+            #convert distance to network chainage
+        
+        self.select()
+        
+        if plot:
+            i = curvatures.sectionInterpolator(geom)
+            plt.close()
+            i.plot()
+            plt.show(block=False)            
+            
+            

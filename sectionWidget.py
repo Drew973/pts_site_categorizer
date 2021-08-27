@@ -7,7 +7,7 @@ Created on Fri Aug 20 08:17:59 2021
 
 from qgis.gui import QgsFieldComboBox, QgsMapLayerComboBox
 import featureWidget
-from PyQt5.QtWidgets import QWidgetAction,QHBoxLayout,QWidget,QMenu
+from PyQt5.QtWidgets import QWidgetAction,QHBoxLayout,QWidget
 
 
 class fieldWidgetAction(QWidgetAction):

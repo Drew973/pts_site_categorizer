@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>871</width>
-    <height>618</height>
+    <width>966</width>
+    <height>677</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -77,8 +77,35 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
+            <widget class="QWidget" name="tab">
+             <attribute name="title">
+              <string>Other Events</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="QPushButton" name="otherEventsAddButton">
+                <property name="text">
+                 <string>Add empty row</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="focusedTableView" name="otherEventsView">
+                <property name="contextMenuPolicy">
+                 <enum>Qt::CustomContextMenu</enum>
+                </property>
+                <property name="editTriggers">
+                 <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+                </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="tab_4">
              <attribute name="title">
               <string>Junctions/Crossings</string>
@@ -141,24 +168,13 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab">
+            <widget class="QWidget" name="tab_2">
              <attribute name="title">
-              <string>Other Events</string>
+              <string>Page</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QPushButton" name="otherEventsAddButton">
-                <property name="text">
-                 <string>Add empty row</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QTableView" name="otherEventsView">
-                <property name="selectionBehavior">
-                 <enum>QAbstractItemView::SelectRows</enum>
-                </property>
-               </widget>
+               <widget class="QUndoView" name="undoView"/>
               </item>
              </layout>
             </widget>
@@ -183,6 +199,11 @@
    <class>sectionWidget</class>
    <extends>QComboBox</extends>
    <header>sectionWidget</header>
+  </customwidget>
+  <customwidget>
+   <class>focusedTableView</class>
+   <extends>QTableView</extends>
+   <header>focusedTableView</header>
   </customwidget>
  </customwidgets>
  <resources/>

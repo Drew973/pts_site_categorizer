@@ -15,6 +15,19 @@ from . import networkModel,jcModel,otherEventsModel,delegates,databaseFunctions,
 
 from .site_categorizer_dockwidget_base import Ui_site_categoriserDockWidgetBase
 
+import chainageDelegate
+
+
+from PyQt5.QtWidgets import QUndoStack
+#from PyQt5.QtWidgets import QUndoView
+
+
+
+
+import logging
+logging.basicConfig(filename=r'C:\Users\drew.bennett\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\site_categorizer\siteCategorizer.log', level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 
 #from secCh import secChWidget
@@ -63,16 +76,34 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.disconnected()
         self.otherEventsAddButton.clicked.connect(self.addOtherEvent)        
         
-        self.secWidget.currentIndexChanged.connect(self.mapper.setCurrentIndex)#networkModel for both mapper and secWidget
+        #self.secWidget.currentIndexChanged.connect(self.mapper.setCurrentIndex)#networkModel for both mapper and secWidget
+        self.secWidget.currentIndexChanged.connect(self.changeRow)
+        
         
         self.addJcButton.clicked.connect(self.addJc)
-        self.secWidget.valueChanged.connect(self.changeSec)
-        self.secWidget.currentIndexChanged.connect(self.chWidget.setRow)
+        #self.secWidget.valueChanged.connect(self.changeSec)
+        #self.secWidget.currentIndexChanged.connect(self.chWidget.setRow)
         
         self.chWidget.setExcess(50)
         
+        self.chainageDelegate = chainageDelegate.chainageDelegate(excess=50)
+        #self.otherEventsView.activated.connect(lambda i: print(i))
+        self.undoStack = QUndoStack(self)
+
+
+    def changeRow(self,row):
+        sec = self.secWidget.itemText(row)
         
+        if self.jcModel:
+            self.jcModel.setSec(sec)
+            
+        if self.otherEventsModel:    
+            self.otherEventsModel.setSec(sec)     
         
+        self.mapper.setCurrentIndex (row)
+        self.chWidget.setRow(row)
+        self.chainageDelegate.setRow(row)    
+        self.secWidget.selectOnLayer(warn=False)
         
 
     def changeSec(self,sec):
@@ -97,15 +128,36 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.setupAct = databaseMenu.addAction('Setup Database for site categories...')
         self.setupAct.triggered.connect(self.setupDatabase)
         
+        
+        editMenu = topMenu.addMenu("Edit")
+        undoAct = editMenu.addAction('Undo')
+        redoAct = editMenu.addAction('Redo')
+        
+        
+        
+        
         #help
         helpMenu = topMenu.addMenu("Help")
         openHelpAct = helpMenu.addAction('Open help (in your default web browser)')
         openHelpAct.triggered.connect(self.openHelp)
         
+        
+        otherEventsMenu = topMenu.addMenu("Other Events")
+        autoCurvaturesAct = otherEventsMenu.addAction('recalculate curvatures')
+        autoCurvaturesAct.triggered.connect(self.autoCurvatures)
+        autoCurvaturesAct2 = otherEventsMenu.addAction('recalculate curvatures and plot')
+        autoCurvaturesAct2.triggered.connect(lambda:self.autoCurvatures(plot=True))
+
+
+    def autoCurvatures(self,plot=False):
+        if self.networkModel and self.otherEventsModel:
+            self.otherEventsModel.autoCurvatures(networkModel=self.networkModel,row=self.secWidget.currentIndex(),plot=plot)
+
 
 
     def connect(self):
-
+        logger.info('connect')
+        
         db = self.connectDialog.getDb()
 
         if not db.isOpen():
@@ -117,13 +169,12 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.connectJc(db)
         self.connectOtherEvents(db)    
         
-        
         if db.isOpen():#connected        
             self.setWindowTitle(db.databaseName()+' - site categorizer')       
             for w in self.connectionDependent:
                 w.setEnabled(True)
-           # self.secWidget.setEnabled(True)
-        
+                
+            self.changeRow(self.secWidget.currentIndex())        
    
                     
         else:        
@@ -139,46 +190,69 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
 
     def connectNetwork(self,db):
-        self.networkModel = networkModel.networkModel(db=db,parent=self)
+        logger.info('connectNetwork(%s)'%(str(db)))
+        
+        if db.isOpen():
+            self.networkModel = networkModel.networkModel(db=db,parent=self)
+        else:
+            self.networkModel = None
+            
         
         self.secWidget.setModel(self.networkModel)
-        self.secWidget.setDisplayColumn(self.networkModel.fieldIndex('sec'))
-        self.secWidget.setModelPKColumn(self.networkModel.fieldIndex('sec'))
-        
+            
         self.chWidget.setModel(self.networkModel)
+        self.chainageDelegate.setModel(self.networkModel)    
         
+        
+        logger.info('mapper')
         self.mapper.setModel(self.networkModel)
         self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
-        
-        self.mapper.addMapping(self.oneWayBox,self.networkModel.fieldIndex('one_way'))
-        self.mapper.addMapping(self.noteEdit,self.networkModel.fieldIndex('note'))
-        self.mapper.addMapping(self.checkedBox,self.networkModel.fieldIndex('checked'))
             
-
+        if self.networkModel:    
+            self.secWidget.setDisplayColumn(self.networkModel.fieldIndex('sec'))
+            self.secWidget.setModelPKColumn(self.networkModel.fieldIndex('sec'))            
+            self.mapper.addMapping(self.oneWayBox,self.networkModel.fieldIndex('one_way'))
+            self.mapper.addMapping(self.noteEdit,self.networkModel.fieldIndex('note'))
+            self.mapper.addMapping(self.checkedBox,self.networkModel.fieldIndex('checked'))
+            
+           
+             
     def connectCategories(self,db):
-        self.policyModel = QSqlTableModel(db=db,parent=self)
+        logger.info('connectCategories(%s)'%(str(db)))
+        
+        if db.isOpen():
+            self.policyModel = QSqlTableModel(db=db,parent=self)
+        else:
+             self.policyModel = None
+        
         self.policyView.setModel(self.policyModel)
-        self.policyModel.setTable('categorizing.categories')
-        self.policyModel.setEditStrategy(QSqlTableModel.OnFieldChange)   
-        self.policyModel.setSort(self.policyModel.fieldIndex('pos'),Qt.AscendingOrder)
-        self.policyModel.select()
+        
+        if self.policyModel:
+            self.policyModel.setTable('categorizing.categories')
+            self.policyModel.setEditStrategy(QSqlTableModel.OnFieldChange)   
+            self.policyModel.setSort(self.policyModel.fieldIndex('pos'),Qt.AscendingOrder)
+            self.policyModel.select()
 
 
     def connectOtherEvents(self,db):
+        logger.info('connectOtherEvents(%s)'%(str(db)))
         
-        self.otherEventsModel = otherEventsModel.otherEventsModel(db=db,parent=self)
+        if db.isOpen():
+            self.otherEventsModel = otherEventsModel.otherEventsModel(db=db,parent=self)
+        else:
+             self.otherEventsModel = None
+                   
         self.otherEventsView.setModel(self.otherEventsModel)
-        self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('pk'))
-        self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('sec'))
-        self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('geom'))
-
-        #self.secChTool.sec_changed.connect(self.otherEventsModel.setSec)
+            
+        if self.otherEventsModel:
+            self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('pk'))
+            self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('sec'))
+            self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('geom'))
         
-        #if self.secChTool.current_sec():
-         #   self.otherEventsModel.setSec(self.secChTool.current_sec())
-        
-        
-        
+            self.otherEventsView.setItemDelegateForColumn(self.otherEventsModel.fieldIndex('s_ch'), self.chainageDelegate)
+            self.otherEventsView.setItemDelegateForColumn(self.otherEventsModel.fieldIndex('e_ch'), self.chainageDelegate)
+            
+            
     def addOtherEvent(self):
         if self.otherEventsModel:
             sec = self.getSec()
@@ -189,7 +263,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 #called when plugin closed?
     def closeEvent(self, event):
         self.closingPlugin.emit()
-        self.chWidget.removeMarker()
         event.accept()
 
 
@@ -202,12 +275,19 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
         
     def connectJc(self,db):
-        self.jcModel = jcModel.jcModel(parent=self,db=db)
+        
+        if db.isOpen():
+            self.jcModel = jcModel.jcModel(parent=self,db=db)
+        else:
+             self.jcModel = None
+             
         self.jcView.setModel(self.jcModel)
-        self.jcView.hideColumn(self.jcModel.fieldIndex('geom'))
-        self.jcView.hideColumn(self.jcModel.fieldIndex('pk'))
-        self.jcModel.dataChanged.connect(lambda:self.jcModel.process(sec=self.secChTool.current_sec()))#reprocess section when jc table changed.
-        self.jcView.setItemDelegateForColumn(self.jcModel.fieldIndex('category'),delegates.comboboxDelegate(self,items=jcCats))
+        
+        if self.jcModel:
+            self.jcView.hideColumn(self.jcModel.fieldIndex('geom'))
+            self.jcView.hideColumn(self.jcModel.fieldIndex('pk'))
+            self.jcModel.dataChanged.connect(lambda:self.jcModel.process(sec=self.secChTool.current_sec()))#reprocess section when jc table changed.
+            self.jcView.setItemDelegateForColumn(self.jcModel.fieldIndex('category'),delegates.comboboxDelegate(self,items=jcCats))
 
        
     def addJc(self):
@@ -249,7 +329,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
 #sets ch of sec_ch widget to minimum chainage of selected rows of jcView
     def setCh(self):
-        self.secChTool.setCh(min([i.sibling(i.row(),1).data() for i in self.jcView.selectedIndexes()]))
+        self.chWidget.setValue(min([i.sibling(i.row(),1).data() for i in self.jcView.selectedIndexes()]))
         
 
 

@@ -98,6 +98,5 @@ if __name__=='__console__':
    # v.show()
     
     #m.chToPoint(0,10,iface.mapCanvas().mapSettings())
-    m.autoCurvatures(381)#5010C614 1/00090
     #get row_number with 'select sec,row_number() over (order by sec)-1 from network where sec<='5010C614 1/00090' order by sec desc limit 1'
     

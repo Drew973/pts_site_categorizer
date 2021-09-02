@@ -1,39 +1,25 @@
-#from  qgis.PyQt import uic
 from qgis.PyQt.QtCore import pyqtSignal,Qt,QUrl
 import os
 
-from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar
+from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar,QUndoStack
 
-#from . import marker
-#from .sec_ch_widget import sec_ch_widget
+
 from qgis.utils import iface
 from qgis.PyQt.QtSql import QSqlTableModel
 from PyQt5.QtGui import QDesktopServices
-#from .database_dialog.database_dialog import database_dialog
 
-from . import networkModel,jcModel,otherEventsModel,delegates,databaseFunctions,databaseDialog
+from . import networkModel,jcModel,otherEventsModel,delegates,databaseFunctions,databaseDialog,commands,chainageDelegate
 
 from .site_categorizer_dockwidget_base import Ui_site_categoriserDockWidgetBase
 
-import chainageDelegate
-
-
-from PyQt5.QtWidgets import QUndoStack
-#from PyQt5.QtWidgets import QUndoView
-
-
-
 
 import logging
-logging.basicConfig(filename=r'C:\Users\drew.bennett\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\site_categorizer\siteCategorizer.log', level=logging.INFO)
+
+logging.basicConfig(filename=r'C:\Users\drew.bennett\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\site_categorizer\siteCategorizer.log',
+                    level=logging.INFO,filemode='w')
+
 logger = logging.getLogger(__name__)
 
-
-
-#from secCh import secChWidget
-
-#uiPath=os.path.join(os.path.dirname(__file__), 'site_categorizer_dockwidget_base.ui')
-#FORM_CLASS, _ = uic.loadUiType(uiPath)
 
 jcCats = ['Q1','Q2','Q3','K']
 
@@ -63,6 +49,8 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         self.addBox.addItems(jcCats)
 
+        self.undoStack = QUndoStack(self)
+        
         
         self.connectDialog = databaseDialog.databaseDialog(parent=self,name='site_categorizer_database')
         self.connectDialog.accepted.connect(self.connect)
@@ -88,7 +76,13 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         self.chainageDelegate = chainageDelegate.chainageDelegate(excess=50)
         #self.otherEventsView.activated.connect(lambda i: print(i))
-        self.undoStack = QUndoStack(self)
+
+       
+        self.undoView.setStack(self.undoStack)
+        self.undoStack.canRedoChanged.connect(self.redoAct.setEnabled)
+        self.undoStack.canUndoChanged.connect(self.undoAct.setEnabled)
+        self.undoAct.setEnabled(self.undoStack.canUndo())
+        self.redoAct.setEnabled(self.undoStack.canRedo())
 
 
     def changeRow(self,row):
@@ -130,10 +124,11 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         
         editMenu = topMenu.addMenu("Edit")
-        undoAct = editMenu.addAction('Undo')
-        redoAct = editMenu.addAction('Redo')
+        self.undoAct = editMenu.addAction('Undo')
+        self.undoAct.triggered.connect(self.undoStack.undo)
         
-        
+        self.redoAct = editMenu.addAction('Redo')
+        self.redoAct.triggered.connect(self.undoStack.redo)
         
         
         #help
@@ -175,8 +170,10 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
                 w.setEnabled(True)
                 
             self.changeRow(self.secWidget.currentIndex())        
-   
-                    
+            self.undoStack.clear()
+            #self.undoAct.setEnabled(self.undoStack.canUndo)
+            #self.redoAct.setEnabled(self.undoStack.canRedo)
+            
         else:        
             iface.messageBar().pushMessage('site categorizer: could not connect to database',duration=4)
             self.disconnected()
@@ -257,8 +254,10 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         if self.otherEventsModel:
             sec = self.getSec()
             if sec:
-                self.otherEventsModel.add(sec)
-            
+                #self.otherEventsModel.insert(sec)
+                c = commands.insertCommand(model=self.otherEventsModel,data={'sec':sec},description='insert')
+                self.undoStack.push(c)
+                        
         
 #called when plugin closed?
     def closeEvent(self, event):
@@ -292,8 +291,12 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
        
     def addJc(self):
         sec = self.getSec()
+        
         if sec and self.jcModel:
-            self.jcModel.add(sec,self.chWidget.value(),self.addBox.currentText())
+            c = commands.insertCommand(model=self.jcModel,data={'sec':sec})
+            self.undoStack.push(c)
+            
+            #self.jcModel.add(sec,self.chWidget.value(),self.addBox.currentText())
            
         
     def getSec(self):
@@ -314,19 +317,16 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
         self.jcView.model().select()
    
-        
-   
+           
     def otherEventsRemove(self):
-        rows = []
-        for index in self.otherEventsView.selectedIndexes():
-            rows.append(index.row())
-        rows.sort(reverse=True)
-        for row in rows:
-            self.otherEventsView.model().removeRow(row, self.otherEventsView.rootIndex())
+        logger.info('otherEventsRemove()')
 
-        self.otherEventsView.model().select()
-        
-        
+        if self.otherEventsModel:
+            pkCol = self.otherEventsModel.fieldIndex('pk')
+            pks = [index.sibling(index.row(),pkCol).data() for index in self.otherEventsView.selectedIndexes()]
+            self.undoStack.push(commands.deleteManyCommand(model=self.otherEventsModel,pks=pks))
+
+
 #sets ch of sec_ch widget to minimum chainage of selected rows of jcView
     def setCh(self):
         self.chWidget.setValue(min([i.sibling(i.row(),1).data() for i in self.jcView.selectedIndexes()]))

@@ -180,7 +180,7 @@ class featureWidget(searchableComboBox):
                 iface.messageBar().pushMessage('%s model primary key column not set'%(self.prefix),duration=4)
             return
         
-        if self.currentIndex():
+        if not self.currentIndex() is None:
             return self.model().index(self.currentIndex(),self.modelPKColumn).data()
         else:
             if warn:

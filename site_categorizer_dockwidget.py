@@ -1,7 +1,7 @@
 from qgis.PyQt.QtCore import pyqtSignal,Qt,QUrl
 import os
 
-from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar,QUndoStack
+from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar,QUndoStack,QUndoCommand
 
 
 from qgis.utils import iface
@@ -23,8 +23,30 @@ logger = logging.getLogger(__name__)
 
 jcCats = ['Q1','Q2','Q3','K']
 
+'''
+change row of QComboBox
+'''
+class changeRowCommand(QUndoCommand):
 
+    def __init__(self,comboBox,row,description='change row'):
+        super().__init__(description)
+        self.comboBox = comboBox
+        self.newRow = row
+        self.oldRow = self.comboBox.currentIndex()
+        logger.info('changeRowCommand.__init__;oldRow:%s;newRow:%d'%(self.oldRow,self.newRow))
+        
+        
+    def setRow(self,row):
+        self.newRow = row        
+        
+    def redo(self):
+        self.comboBox.setCurrentIndex(self.newRow)
+#        logger.info('changeRowCommand.redo;newRow:%d'%(self.newRow))
 
+    def undo(self):
+        self.comboBox.setCurrentIndex(self.oldRow)
+#        logger.info('changeRowCommand.redo;oldRow:%d'%(self.oldRow))
+        
 
 #class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
@@ -42,10 +64,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         #self.secChTool.sec_changed.connect(self.secChanged)
 
         self.mapper = QDataWidgetMapper(self)
-        self.networkModel = None
         self.jcModel = None
         self.otherEventsModel = None
-        
+        self.secRow = 0
         
         self.addBox.addItems(jcCats)
 
@@ -59,57 +80,60 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.initJcMenu()
         self.initOtherEventsMenu()
         
-        
         self.connectionDependent = [self.setupAct,self.addJcButton,self.secWidget,self.otherEventsAddButton,self.oneWayBox,self.noteEdit,self.checkedBox,self.addBox]
         self.disconnected()
-        self.otherEventsAddButton.clicked.connect(self.addOtherEvent)        
+        self.otherEventsAddButton.clicked.connect(self.addOtherEvent)                
         
-        #self.secWidget.currentIndexChanged.connect(self.mapper.setCurrentIndex)#networkModel for both mapper and secWidget
-        self.secWidget.currentIndexChanged.connect(self.changeRow)
+        
+        
+        #self.csc = changeRowCommand(self.secWidget,row=0,description='change sec')
+                                                                                        
+    
+       # self.secWidget.currentIndexChanged.connect(lambda row:self.undoStack.push(changeRowCommand(self.secWidget,
+             #                                                                            oldRow=self.secRow,
+                  #                                                                       newRow=row,
+                                                                                        # description='change sec')))
+        self.secWidget.currentIndexChanged.connect(self.setSecRow)#happens 1st?
+        
+        #self.secWidget.currentIndexChanged.connect(self.pushChangeSecCommand)
+        
         
         
         self.addJcButton.clicked.connect(self.addJc)
-        #self.secWidget.valueChanged.connect(self.changeSec)
-        #self.secWidget.currentIndexChanged.connect(self.chWidget.setRow)
-        
         self.chWidget.setExcess(50)
-        
-        self.chainageDelegate = chainageDelegate.chainageDelegate(excess=50)
-        #self.otherEventsView.activated.connect(lambda i: print(i))
-
-       
+        self.chainageDelegate = chainageDelegate.chainageDelegate(undoStack=self.undoStack,excess=50)
         self.undoView.setStack(self.undoStack)
-        self.undoStack.canRedoChanged.connect(self.redoAct.setEnabled)
-        self.undoStack.canUndoChanged.connect(self.undoAct.setEnabled)
-        self.undoAct.setEnabled(self.undoStack.canUndo())
-        self.redoAct.setEnabled(self.undoStack.canRedo())
 
 
-    def changeRow(self,row):
-        sec = self.secWidget.itemText(row)
-        
-        if self.jcModel:
-            self.jcModel.setSec(sec)
-            
-        if self.otherEventsModel:    
-            self.otherEventsModel.setSec(sec)     
-        
-        self.mapper.setCurrentIndex (row)
-        self.chWidget.setRow(row)
-        self.chainageDelegate.setRow(row)    
-        self.secWidget.selectOnLayer(warn=False)
-        
+    def pushChangeSecCommand(self,row):
+        self.csc.setRow(row)
+        self.undoStack.push(self.csc)
 
-    def changeSec(self,sec):
+
+
+#slot to be called from command
+#everything that caused secWidget.currentIndexChanged should have undo
+    def setSecRow(self,row):
+        #self.csc = changeRowCommand(self.secWidget,row=0,description='change sec')
+
+        if row <= self.secWidget.model().rowCount():
+            if row!=self.secWidget.currentIndex():
+                self.secWidget.setCurrentIndex(row)
             
-        print('change sec:%s'%(sec))
-        if self.jcModel:
-            self.jcModel.setSec(sec)
+            sec = self.secWidget.itemText(row)
             
-        if self.otherEventsModel:    
-            self.otherEventsModel.setSec(sec)
+            if self.jcModel:
+                self.jcModel.setSec(sec)
                 
-        
+            if self.otherEventsModel:    
+                self.otherEventsModel.setSec(sec)     
+            
+            self.mapper.setCurrentIndex (row)
+            self.chWidget.setRow(row)
+            self.chainageDelegate.setRow(row)    
+            self.secWidget.selectOnLayer(warn=False)
+            self.otherEventsView.closeEditor()
+
 
     def initTopMenu(self):
         topMenu = QMenuBar()
@@ -122,14 +146,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.setupAct = databaseMenu.addAction('Setup Database for site categories...')
         self.setupAct.triggered.connect(self.setupDatabase)
         
-        
         editMenu = topMenu.addMenu("Edit")
-        self.undoAct = editMenu.addAction('Undo')
-        self.undoAct.triggered.connect(self.undoStack.undo)
-        
-        self.redoAct = editMenu.addAction('Redo')
-        self.redoAct.triggered.connect(self.undoStack.redo)
-        
+        editMenu.addAction(self.undoStack.createUndoAction(self))
+        editMenu.addAction(self.undoStack.createRedoAction(self))
         
         #help
         helpMenu = topMenu.addMenu("Help")
@@ -145,8 +164,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
 
     def autoCurvatures(self,plot=False):
-        if self.networkModel and self.otherEventsModel:
-            self.otherEventsModel.autoCurvatures(networkModel=self.networkModel,row=self.secWidget.currentIndex(),plot=plot)
+        
+        if self.secWidget.model().rowCount>=0 and self.otherEventsModel:
+            self.otherEventsModel.autoCurvatures(networkModel=self.secWidget.model(),row=self.secWidget.currentIndex(),plot=plot)
 
 
 
@@ -169,10 +189,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             for w in self.connectionDependent:
                 w.setEnabled(True)
                 
-            self.changeRow(self.secWidget.currentIndex())        
+            self.setSecRow(self.secWidget.currentIndex())        
             self.undoStack.clear()
-            #self.undoAct.setEnabled(self.undoStack.canUndo)
-            #self.redoAct.setEnabled(self.undoStack.canRedo)
+ 
             
         else:        
             iface.messageBar().pushMessage('site categorizer: could not connect to database',duration=4)
@@ -190,27 +209,31 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         logger.info('connectNetwork(%s)'%(str(db)))
         
         if db.isOpen():
-            self.networkModel = networkModel.networkModel(db=db,parent=self)
+            
+            m = networkModel.networkModel(db=db,parent=self.secWidget)
+            if not m.select():
+                m = None
+            
         else:
-            self.networkModel = None
+            m = None
             
         
-        self.secWidget.setModel(self.networkModel)
+        self.secWidget.setModel(m)
             
-        self.chWidget.setModel(self.networkModel)
-        self.chainageDelegate.setModel(self.networkModel)    
+        self.chWidget.setModel(m)
+        self.chainageDelegate.setModel(m)    
         
         
         logger.info('mapper')
-        self.mapper.setModel(self.networkModel)
+        self.mapper.setModel(m)
         self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
             
-        if self.networkModel:    
-            self.secWidget.setDisplayColumn(self.networkModel.fieldIndex('sec'))
-            self.secWidget.setModelPKColumn(self.networkModel.fieldIndex('sec'))            
-            self.mapper.addMapping(self.oneWayBox,self.networkModel.fieldIndex('one_way'))
-            self.mapper.addMapping(self.noteEdit,self.networkModel.fieldIndex('note'))
-            self.mapper.addMapping(self.checkedBox,self.networkModel.fieldIndex('checked'))
+        if m:    
+            self.secWidget.setDisplayColumn(m.fieldIndex('sec'))
+            self.secWidget.setModelPKColumn(m.fieldIndex('sec'))            
+            self.mapper.addMapping(self.oneWayBox,m.fieldIndex('one_way'))
+            self.mapper.addMapping(self.noteEdit,m.fieldIndex('note'))
+            self.mapper.addMapping(self.checkedBox,m.fieldIndex('checked'))
             
            
              
@@ -235,7 +258,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         logger.info('connectOtherEvents(%s)'%(str(db)))
         
         if db.isOpen():
-            self.otherEventsModel = otherEventsModel.otherEventsModel(db=db,parent=self)
+            self.otherEventsModel = otherEventsModel.otherEventsModel(db=db,parent=self,undoStack=self.undoStack)
         else:
              self.otherEventsModel = None
                    

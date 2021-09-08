@@ -65,6 +65,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.otherEventsView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.otherEventsView.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed)
         self.otherEventsView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.otherEventsView.setSortingEnabled(True)
         self.otherEventsView.setObjectName("otherEventsView")
         self.verticalLayout_5.addWidget(self.otherEventsView)
         self.tabWidget.addTab(self.tab, "")
@@ -111,7 +112,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         site_categoriserDockWidgetBase.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(site_categoriserDockWidgetBase)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(site_categoriserDockWidgetBase)
 
     def retranslateUi(self, site_categoriserDockWidgetBase):

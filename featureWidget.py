@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QCompleter,QApplication,QComboBox,QMenu,QAction
-from PyQt5.QtCore import Qt,pyqtSignal
+from PyQt5.QtCore import Qt,QStringListModel
 
 #from . import searchableComboBox
 
@@ -28,9 +28,7 @@ def zoomToSelected(layer):
 
 
 class searchableComboBox(QComboBox):
-    
-    valueChanged = pyqtSignal(str)
-    
+        
     def __init__(self,parent=None):
         super().__init__(parent)
 
@@ -41,13 +39,6 @@ class searchableComboBox(QComboBox):
         self.completer().setCompletionMode(QCompleter.PopupCompletion)
         self.lineEdit().editingFinished.connect(self.editingFinished)
 
-        self.currentIndexChanged.connect(self.indexChanged)
-        
-        
-    def indexChanged(self,i):
-        self.valueChanged.emit(self.itemText(i))
-        self.featureChanged.emit(self.getFeature(warn=False))
-        
         
     def editingFinished(self):
       #  print(self.currentData())
@@ -73,11 +64,14 @@ setLayerPK(str)#primary key field of layer.
 
 self.secChTool.secWidget.setModel(self.networkModel)
 self.secChTool.secWidget.setModelColumn(self.networkModel.fieldIndex('sec'))
+
+
+needs to be parent of model or crashes when calling setModel for 2nd time.
+
 '''
 
 
 class featureWidget(searchableComboBox):
-    featureChanged = pyqtSignal(object)#any python object. qgs feature or None
     
     def __init__(self,parent=None,prefix='',layer=None,field=None,model=None,modelPKColumn=None):
         super(featureWidget,self).__init__(parent)
@@ -110,7 +104,6 @@ class featureWidget(searchableComboBox):
         
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(lambda pt:self.menu.exec_(self.mapToGlobal(pt)))
-        self.currentIndexChanged.connect(self.emitFeature)
 
 
     #set column of model with primary key
@@ -126,36 +119,36 @@ class featureWidget(searchableComboBox):
 
     def setModel(self,model):
         logger.info('setModel(%s)'%(str(model)))
-        super().setModel(model)
+                
         if model:
+            logger.info('super().setModel()')
+            super().setModel(model)
             self.setEnabled(True)
+            
         else:
+            logger.info('reset model')
+            super().setModel(QStringListModel([]))#crashes on 2nd time.
+            #'cannot be null pointer'. clear will clear external model. don;t want this.
             self.setEnabled(False)
 
+        logger.info('finished setModel(%s)'%(self.model()))
 
 
     def setEnabled(self,enabled):
         super().setEnabled(enabled)
         for a in self.actions():
-            print(a)
             a.setEnabled(enabled)
 
 
 
     def setLayer(self,layer):
         self.layer = layer
-        self.emitFeature()
 
 
     #set field with primary key
     def setField(self,field):
         self.field = field
-        self.emitFeature()
 
-
-    def emitFeature(self):
-        self.featureChanged.emit(self.getFeature(warn=False))
-        
 
     def getLayer(self,warn=True):
         if self.layer:
@@ -262,38 +255,15 @@ class featureWidget(searchableComboBox):
                 return
             
             self.setCurrentIndex(r)
-           
             
-    #adds items from layer and field
-    def setModelFromLayer(self):
-        layer = self.getLayer()
-        field = self.getField()
-                
-                
-        if layer and field:
-            self.clear()
-            field = layer.fields().indexFromName(field)
-            self.addItems([str(v) for v in layer.uniqueValues(field)])
-                    
 
 if __name__=='__console__':
     layer = iface.activeLayer()
     w = featureWidget()
-    #m = QStringListModel(['aa','ab','ac'])
-    #w.setModel(m)
+    m = QStringListModel(['aa','ab','ac'])
+    w.setModel(m)
     w.setLayer(layer)
     w.setField('sec')
-    w.setModelFromLayer()
     w.show()
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    
-    w = featureWidget()
-    #m = QStringListModel(['aa','ab','ac'])
-    #w.setModel(m)
-    w.show()
-    sys.exit(app.exec_())  
-
-    

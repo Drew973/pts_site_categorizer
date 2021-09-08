@@ -31,10 +31,12 @@ class insertCommand(QUndoCommand):
         
 
     def redo(self):
+        logger.info('insertCommand.redo;data:%s'%(str(self.data)))
         self.pk = self.model.insert(**self.data)
 
 
     def undo(self):
+        logger.info('insertCommand.undo;pk:%s'%(str(self.pk)))
         self.data = self.model.delete(self.pk)
 
 

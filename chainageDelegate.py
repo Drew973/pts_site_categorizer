@@ -1,6 +1,11 @@
 from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtCore import QModelIndex
-import chainageWidget
+
+import logging
+logger = logging.getLogger(__name__)
+
+from . import chainageWidget
+from . import undoDelegate
 
 
 
@@ -36,39 +41,44 @@ class persistantDelete(QStyledItemDelegate):
 
 
 
-class chainageDelegate(QStyledItemDelegate):
+class chainageDelegate(undoDelegate.undoDelegatePk):
     
     
-    
-    def __init__(self,parent=None,model=None,row=None,excess=0):
-        super().__init__(parent)
+    '''
+    model=model with network
+    row=current row of model
+    excess=excess for chainageWidget
+    '''
+    def __init__(self,undoStack,parent=None,model=None,row=None,excess=0):
+        super(chainageDelegate,self).__init__(parent=parent,undoStack=undoStack)
         
         self.model = model
         self.row = row
         self.excess = excess
         
         
-        
     def createEditor(self,parent,option,index):
         w = chainageWidget.chainageWidget(parent=parent,model=self.model,row=self.row,excess=self.excess)
-        w.valueChanged.connect(lambda:self.setModelData(w,index.model(),index))#w deactivated by clicking map so setModelData not called?
-        #self.setCurrent(index,w)
+        w.updateCommand = undoDelegate.updateCommandPk(index)
+        #w.valueChanged.connect(lambda:self.setModelData(w,index.model(),index))#w deactivated by clicking map so setModelData not called?
+        #don't 
         return w
     
 
+    def setEditorData(self,editor,index):
+        #editor.setValue(index.data())
+        editor.setIndex(index)
+
+
     def setModelData(self,editor,model,index):
+        logging.info('setModelData(%s)'%(index.data()))
         model.setData(index,editor.value())
-    
-    
-    def setEditorData(self,editor, index):
-        editor.setValue(index.data())
-    
-    
-    
+        
     
     #clicking map caused widget to lose focus.
     
     def setModel(self,model):
+        logger.info('setModel')
         self.model = model
         
         

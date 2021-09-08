@@ -10,12 +10,50 @@ logger = logging.getLogger(__name__)
 
 from PyQt5.QtWidgets import QUndoCommand,QUndoStack
 
-import undoDelegate
-
 
 def dbToCon(db):
    # print('user:%s'%(db.userName()))
     return psycopg2.connect(host=db.hostName(),dbname=db.databaseName(),user=db.userName(),password=db.password())
+
+#model.select() will delete all existing indexes. 
+
+class updateCommand(QUndoCommand):
+
+    def __init__(self, model,index,oldValue,newValue,description='update'):
+        logger.info('updateCommand.__init__')
+        super().__init__(description)
+        self.model = model
+        self.index = index
+        self.oldValue = oldValue
+        self.newValue = newValue
+        
+        
+    def redo(self):
+        self.model.setValue(self.index,self.newValue)
+        
+        
+    def undo(self):
+        self.model.setValue(self.index,self.oldValue)
+            
+
+class setSecCommand(QUndoCommand):
+
+    def __init__(self, model,old,new,description='setSec'):
+        super().__init__(description)
+        self.model = model
+        self.old = old
+        self.new = new
+        
+    def redo(self):
+        self.model.sec = self.new
+        self.model.setFilter("sec='%s'"%(self.new))
+        self.model.select()
+        
+        
+    def undo(self):
+        self.model.sec = self.old
+        self.model.setFilter("sec='%s'"%(self.old))
+        self.model.select()
 
 
 class otherEventsModel(QSqlTableModel):
@@ -33,20 +71,32 @@ class otherEventsModel(QSqlTableModel):
         self.rowsRemoved.connect(self.select)
         self.undoStack = undoStack
         self.sec = ''
+    
+    #for edit role only. 
+    def setValue(self,index,value):
+        super().setData(index,value)
+    
+    
+    
+    def setData(self, index, value, role=Qt.EditRole):
+        
+        if role == Qt.EditRole:
+            if not self.undoStack is None:#bool(QUndoStack) False for empty stack
+                self.undoStack.push(updateCommand(self,index,index.data(),value))
+            else:
+                updateCommand(self,index,index.data(),value).redo()
+            
+            return True
+            
+        else:
+            return super().setData(index,value,role)
+            
 
 
     def rowToPk(self,row):
         return self.index(row,self.fieldIndex('pk')).data()
     
     
-    def indexToPk(self,index):
-        return index.sibling(index.row(),self.fieldIndex('pk')).data()
-     
-     
-    def pkToIndex(self,pk,col):
-        return self.index(self.find(self.fieldIndex('pk'),pk),col)
- 
- 
     def pkToRow(self,pk):
         return self.find(self.fieldIndex('pk'),pk)
     
@@ -54,15 +104,15 @@ class otherEventsModel(QSqlTableModel):
 
     def setSec(self,sec):
         
-        self.sec = sec
-        self.setFilter("sec='%s'"%(sec))
-        self.select()
+        #self.sec = sec
+        #self.setFilter("sec='%s'"%(sec))
+        #self.select()
 
-       # c = setSecCommand(self,self.sec,sec)
-       # if self.undoStack:
-       #     self.undoStack.push(c)
-       # else:
-       #     c.redo()
+        c = setSecCommand(self,self.sec,sec)
+        if self.undoStack:
+            self.undoStack.push(c)
+        else:
+            c.redo()
 
 
 #returns 1st row where col=val
@@ -75,17 +125,16 @@ class otherEventsModel(QSqlTableModel):
         
        #insert row and return pk of new row.
     def insert(self,sec,rev=False,s_ch=0,e_ch=0,category='C'):
-        logger.info('insert(%s)'%(sec))
         q = 'insert into categorizing.other_events(sec,reversed,s_ch,e_ch,category) values(%s,%s,%s,%s,%s) returning pk' 
 
         with dbToCon(self.database()) as con:
             cur = con.cursor()
             cur.execute(q,(sec,rev,s_ch,e_ch,category))
             
-        self.select()#change needs commiting before this
-        return  cur.fetchone()[0] #pk of new row
-    
-    
+            self.select()
+            return cur.fetchone()[0] #pk of new row
+
+
     #inserts list of dict like. returns primary keys.
     def insertMany(self,vals):
         
@@ -101,15 +150,14 @@ class otherEventsModel(QSqlTableModel):
     
     
     def delete(self,pk):
-        logger.info('delete(%s)'%(pk))
         q = 'delete from categorizing.other_events where pk=%(pk)s RETURNING sec,reversed as rev,s_ch,e_ch,category'
         
         with dbToCon(self.database()) as con:
             cur = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
             cur.execute(q,{'pk':pk})
         
-        self.select()#commit changes before this
-        return cur.fetchone()
+            self.select()    
+            return cur.fetchone()
     
     
     def deleteMany(self,pks):
@@ -122,7 +170,7 @@ class otherEventsModel(QSqlTableModel):
             cur = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
             cur.execute(q,{'pks':pks})
             
-        self.select()#commit changes before this
+        self.select()
         return cur.fetchall()
 #dictcursor result is displayed like list
 
@@ -177,9 +225,6 @@ if __name__=='__console__':
     m = otherEventsModel(db,undoStack=u)
     m.setSec('5010A000677 /00020')
     v.setModel(m)
-    
-    delegate = undoDelegate.undoDelegatePk(u)
-    v.setItemDelegate(delegate)
     v.show()
     
     

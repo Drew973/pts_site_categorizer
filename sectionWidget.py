@@ -48,7 +48,7 @@ class sectionWidget(featureWidget.featureWidget):
     
     def __init__(self,parent=None,prefix=''):
         super().__init__(parent=parent,prefix=prefix)
-        
+        self.lastRow = 0
         
         self.layerBox = QgsMapLayerComboBox()
         self.fieldBox = QgsFieldComboBox()

@@ -78,6 +78,8 @@ class networkModel(QSqlTableModel):
         return self.index(row,col).data()
 
 
+
+
 #key like (row,col)
    # def __getitem__(self,key):
     #    self.index(key,c).data()

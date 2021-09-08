@@ -12,6 +12,11 @@ logger = logging.getLogger(__name__)
 spinbox that moves marker to chainage.Section given by row of model.
 independent of layers. uses model to get geometry.
 
+model = networkModel
+row=row of network model
+
+
+
 '''
 
 class chainageWidget(QDoubleSpinBox):
@@ -23,6 +28,8 @@ class chainageWidget(QDoubleSpinBox):
         if not canvas:
             canvas = iface.mapCanvas()
             
+            
+        self.index = None    
         self.marker = QgsVertexMarker(canvas)
         self.marker.setIconSize(15)
         self.marker.setIconType(QgsVertexMarker.ICON_X)
@@ -37,12 +44,18 @@ class chainageWidget(QDoubleSpinBox):
         self.setDecimals(0)
         
         self.tool.canvasClicked.connect(self.setFromPoint)
-      
-        self.focusCount = 1
-            
+        
+
+
+    def setIndex(self,index):
+        self.index = index
+        self.setValue(index.data())
+        
             
     #delegate will pass None whilst deleting row
     def setValue(self,value):
+        logger.info('setValue(%s)'%(str(value)))
+        
         if value is None:
             value = 0
             
@@ -50,6 +63,10 @@ class chainageWidget(QDoubleSpinBox):
             self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=value,crs=iface.mapCanvas().mapSettings().destinationCrs()))
             #canvas.mapRenderer().destinationCrs() in qgis 2
             #markers work in map crs.          
+            
+            
+        if not self.index is None:
+            self.index.model().setData(self.index,value)
             
         super().setValue(value)
             
@@ -76,7 +93,6 @@ class chainageWidget(QDoubleSpinBox):
             self.setValue(self.model.pointToChainage(row=self.row,point=point,crs=iface.mapCanvas().mapSettings().destinationCrs()))
             #canvas.mapRenderer().destinationCrs() in qgis 2
     
-        self.focusCount = 1
         
         
     
@@ -102,7 +118,6 @@ class chainageWidget(QDoubleSpinBox):
     def focusInEvent(self,event):
         self.activateTool()
         self.marker.show()
-        self.focusCount = 1
             
         
     def setExcess(self,excess):

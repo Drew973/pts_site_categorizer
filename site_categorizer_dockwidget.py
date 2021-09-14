@@ -72,7 +72,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
         self.undoStack = QUndoStack(self)
         
-        
         self.connectDialog = databaseDialog.databaseDialog(parent=self,name='site_categorizer_database')
         self.connectDialog.accepted.connect(self.connect)
         
@@ -84,11 +83,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.disconnected()
         self.otherEventsAddButton.clicked.connect(self.addOtherEvent)                
         
-        
-        
         #self.csc = changeRowCommand(self.secWidget,row=0,description='change sec')
-                                                                                        
-    
        # self.secWidget.currentIndexChanged.connect(lambda row:self.undoStack.push(changeRowCommand(self.secWidget,
              #                                                                            oldRow=self.secRow,
                   #                                                                       newRow=row,
@@ -97,17 +92,15 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         #self.secWidget.currentIndexChanged.connect(self.pushChangeSecCommand)
         
-        
-        
         self.addJcButton.clicked.connect(self.addJc)
         self.chWidget.setExcess(50)
         self.chainageDelegate = chainageDelegate.chainageDelegate(undoStack=self.undoStack,excess=50)
         self.undoView.setStack(self.undoStack)
 
 
-    def pushChangeSecCommand(self,row):
-        self.csc.setRow(row)
-        self.undoStack.push(self.csc)
+    def onSecActivated(self,row):
+        csc = changeRowCommand()
+        self.undoStack.push(csc)
 
 
 
@@ -132,7 +125,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             self.chWidget.setRow(row)
             self.chainageDelegate.setRow(row)    
             self.secWidget.selectOnLayer(warn=False)
-            self.otherEventsView.closeEditor()
+            #self.otherEventsView.closeEditor()
 
 
     def initTopMenu(self):

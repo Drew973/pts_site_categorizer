@@ -15,6 +15,8 @@ independent of layers. uses model to get geometry.
 model = networkModel
 row=row of network model
 
+want setting model value to be reversible
+holding arrow only counts as 1 change.
 
 
 '''

@@ -21,8 +21,9 @@ class networkModel(QSqlTableModel):
         self.setTable('categorizing.network')
         self.setEditStrategy(QSqlTableModel.OnFieldChange)
         self.setSort(self.fieldIndex('sec'),Qt.AscendingOrder)
+        self.currentRow = None
         self.select()
-
+        
          
 
 #returns 1st row omdex where col=val
@@ -34,11 +35,21 @@ class networkModel(QSqlTableModel):
     
     
     
-    def sectionLength(self,row):
+    def sectionLength(self,row=None):
+        
+        if row is None:
+            if not self.currentRow is None:
+                row = self.currentRow
+                
+                
         return self.index(row,self.fieldIndex('meas_len')).data()
     
     
-    def geom(self,row):
+    def geom(self,row=None):
+        if row is None:
+            if not self.currentRow is None:
+                row = self.currentRow
+                
         return QgsGeometry.fromWkt(self.index(row,self.fieldIndex('wkt')).data())
     
     

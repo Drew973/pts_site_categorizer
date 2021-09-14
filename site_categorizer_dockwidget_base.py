@@ -61,7 +61,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.otherEventsAddButton = QtWidgets.QPushButton(self.tab)
         self.otherEventsAddButton.setObjectName("otherEventsAddButton")
         self.verticalLayout_5.addWidget(self.otherEventsAddButton)
-        self.otherEventsView = focusedTableView(self.tab)
+        self.otherEventsView = eventsView(self.tab)
         self.otherEventsView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.otherEventsView.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed)
         self.otherEventsView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
@@ -98,14 +98,6 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.policyView.setObjectName("policyView")
         self.verticalLayout_4.addWidget(self.policyView)
         self.tabWidget.addTab(self.widget, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.tab_2)
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.undoView = QtWidgets.QUndoView(self.tab_2)
-        self.undoView.setObjectName("undoView")
-        self.verticalLayout_7.addWidget(self.undoView)
-        self.tabWidget.addTab(self.tab_2, "")
         self.verticalLayout_2.addWidget(self.tabWidget)
         self.verticalLayout.addWidget(self.frame)
         self.verticalLayout_3.addWidget(self.main_widget)
@@ -124,7 +116,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.checkedBox.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Mark section as checked.</p></body></html>"))
         self.checkedBox.setText(_translate("site_categoriserDockWidgetBase", "Checked"))
         self.otherEventsAddButton.setText(_translate("site_categoriserDockWidgetBase", "Add empty row"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("site_categoriserDockWidgetBase", "Other Events"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("site_categoriserDockWidgetBase", "Events"))
         self.label.setText(_translate("site_categoriserDockWidgetBase", "add:"))
         self.addBox.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Category to add.</p><p>Q1=minor junction,</p><p>Q2=major junction,</p><p>Q3=junction with roundabout</p><p>K=crossing</p></body></html>"))
         self.addJcButton.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Add junction or crossing with selected section,chainage and category.</p></body></html>"))
@@ -134,7 +126,6 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_4), _translate("site_categoriserDockWidgetBase", "jc table"))
         self.policyView.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>policy/categories table. Where a location is affected by multiple events the event with the lower pos will take precedence. Pos should increase as irl decreases.</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), _translate("site_categoriserDockWidgetBase", "Categories"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("site_categoriserDockWidgetBase", "Page"))
-from chainageWidget import chainageWidget
-from focusedTableView import focusedTableView
-from sectionWidget import sectionWidget
+from . chainageWidget import chainageWidget
+from . eventsView import eventsView
+from . sectionWidget import sectionWidget

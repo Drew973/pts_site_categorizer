@@ -18,7 +18,6 @@ row=row of network model
 want setting model value to be reversible
 holding arrow only counts as 1 change.
 
-
 '''
 
 class chainageWidget(QDoubleSpinBox):
@@ -46,7 +45,8 @@ class chainageWidget(QDoubleSpinBox):
         self.setDecimals(0)
         
         self.tool.canvasClicked.connect(self.setFromPoint)
-        
+        self.valueChanged.connect(self.onValueChanged)
+        self.onValueChanged()
 
 
     def setIndex(self,index):
@@ -55,23 +55,33 @@ class chainageWidget(QDoubleSpinBox):
         
             
     #delegate will pass None whilst deleting row
-    def setValue(self,value):
-        logger.info('setValue(%s)'%(str(value)))
+   # def setValue(self,value):
+    #    logger.info('setValue(%s)'%(str(value)))
+     #   
+      #  if value is None:
+       #     value = 0
+            
+        #if self.model:
+         #   self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=value,crs=iface.mapCanvas().mapSettings().destinationCrs()))
+                 
+
+            
+       # super().setValue(value)
+            
+        
+    def onValueChanged(self,value=None): 
         
         if value is None:
-            value = 0
-            
+            value = self.value()
+        
         if self.model:
             self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=value,crs=iface.mapCanvas().mapSettings().destinationCrs()))
             #canvas.mapRenderer().destinationCrs() in qgis 2
-            #markers work in map crs.          
-            
+            #markers work in map crs.    
             
         if not self.index is None:
-            self.index.model().setData(self.index,value)
-            
-        super().setValue(value)
-            
+            self.index.model().setData(self.index,value)    
+    
     
     def setRow(self,row):
         self.row = row
@@ -95,8 +105,6 @@ class chainageWidget(QDoubleSpinBox):
             self.setValue(self.model.pointToChainage(row=self.row,point=point,crs=iface.mapCanvas().mapSettings().destinationCrs()))
             #canvas.mapRenderer().destinationCrs() in qgis 2
     
-        
-        
     
     def setModel(self,model):
         logger.info('setModel(%s)'%(model))

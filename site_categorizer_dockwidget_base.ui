@@ -81,7 +81,7 @@
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">
-              <string>Other Events</string>
+              <string>Events</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
@@ -92,7 +92,7 @@
                </widget>
               </item>
               <item>
-               <widget class="focusedTableView" name="otherEventsView">
+               <widget class="eventsView" name="otherEventsView">
                 <property name="contextMenuPolicy">
                  <enum>Qt::CustomContextMenu</enum>
                 </property>
@@ -171,16 +171,6 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab_2">
-             <attribute name="title">
-              <string>Page</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
-              <item>
-               <widget class="QUndoView" name="undoView"/>
-              </item>
-             </layout>
-            </widget>
            </widget>
           </item>
          </layout>
@@ -204,9 +194,9 @@
    <header>sectionWidget</header>
   </customwidget>
   <customwidget>
-   <class>focusedTableView</class>
+   <class>eventsView</class>
    <extends>QTableView</extends>
-   <header>focusedTableView</header>
+   <header>eventsView</header>
   </customwidget>
  </customwidgets>
  <resources/>

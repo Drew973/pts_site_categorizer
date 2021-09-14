@@ -38,6 +38,8 @@ class updateCommand(QUndoCommand):
                 return self.model.index(i,self.column)
 
 
+
+
 class undoableTableModel(QSqlTableModel):
     
     def __init__(self,parent,db,undoStack):
@@ -49,22 +51,32 @@ class undoableTableModel(QSqlTableModel):
     def setDataCommandLess(self, index, value, role=Qt.EditRole):
         super().setData(index, value,role)
 
+
+
+    def runUndoCommand(self,command):
+        if self.undoStack is None:
+            command.redo()
+        else:
+            self.undoStack.push(command)
+            
     
     #parent is parent for QUndoCommand to push
-    def setData(self, index, value, role=Qt.EditRole,parent=None,description=''):
+    def setData(self, index, value, role=Qt.EditRole,parent=None,description='set data'):
         if role == Qt.EditRole:
-            
-            c = updateCommand(index,value,description=description,parent=parent)
-            
-            if self.undoStack is None:
-                c.redo()
-            else:
-                self.undoStack.push(c)
-            
+            current = self.data(index,role)
+            if current!=value:
+                self.runUndoCommand(updateCommand(index,value,description=description,parent=parent))
             return True
         
         return QSqlTableModel.setData(self, index, value, role)
- 
+    
+    
+    #returns 1st row where primaryValues == values
+    def findPrimaryValues(self,values):
+         for i in range(self.rowCount()):
+            if self.primaryValues(i) == values:
+                return i
+         
  
 if __name__=='__console__' or __name__=='__main__':
     from PyQt5.QtSql import QSqlDatabase

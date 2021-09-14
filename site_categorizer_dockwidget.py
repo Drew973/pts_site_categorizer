@@ -65,7 +65,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
         self.mapper = QDataWidgetMapper(self)
         self.jcModel = None
-        self.otherEventsModel = None
         self.secRow = 0
         
         self.addBox.addItems(jcCats)
@@ -77,11 +76,11 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         self.initTopMenu()
         self.initJcMenu()
-        self.initOtherEventsMenu()
+        
         
         self.connectionDependent = [self.setupAct,self.addJcButton,self.secWidget,self.otherEventsAddButton,self.oneWayBox,self.noteEdit,self.checkedBox,self.addBox]
         self.disconnected()
-        self.otherEventsAddButton.clicked.connect(self.addOtherEvent)                
+        self.otherEventsAddButton.clicked.connect(self.otherEventsView.addOtherEvent)                
         
         #self.csc = changeRowCommand(self.secWidget,row=0,description='change sec')
        # self.secWidget.currentIndexChanged.connect(lambda row:self.undoStack.push(changeRowCommand(self.secWidget,
@@ -94,9 +93,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         self.addJcButton.clicked.connect(self.addJc)
         self.chWidget.setExcess(50)
-        self.chainageDelegate = chainageDelegate.chainageDelegate(undoStack=self.undoStack,excess=50)
-        self.undoView.setStack(self.undoStack)
-
+        #self.chainageDelegate = chainageDelegate.chainageDelegate(undoStack=self.undoStack,excess=50)
+        self.otherEventsView.undoStack = self.undoStack
+        
 
     def onSecActivated(self,row):
         csc = changeRowCommand()
@@ -118,12 +117,13 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             if self.jcModel:
                 self.jcModel.setSec(sec)
                 
-            if self.otherEventsModel:    
-                self.otherEventsModel.setSec(sec)     
+                
+            self.otherEventsView.setSection(self.secWidget.model(),row,sec)
+             
             
             self.mapper.setCurrentIndex (row)
             self.chWidget.setRow(row)
-            self.chainageDelegate.setRow(row)    
+           # self.chainageDelegate.setRow(row)    
             self.secWidget.selectOnLayer(warn=False)
             #self.otherEventsView.closeEditor()
 
@@ -150,6 +150,8 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         
         
         otherEventsMenu = topMenu.addMenu("Other Events")
+        
+        otherEventsMenu.addAction(self.otherEventsView.addAct)
         autoCurvaturesAct = otherEventsMenu.addAction('recalculate curvatures')
         autoCurvaturesAct.triggered.connect(self.autoCurvatures)
         autoCurvaturesAct2 = otherEventsMenu.addAction('recalculate curvatures and plot')
@@ -158,24 +160,26 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
     def autoCurvatures(self,plot=False):
         
-        if self.secWidget.model().rowCount>=0 and self.otherEventsModel:
-            self.otherEventsModel.autoCurvatures(networkModel=self.secWidget.model(),row=self.secWidget.currentIndex(),plot=plot)
+        if self.secWidget.model().rowCount>=0 and self.otherEventsView.model():
+            self.self.otherEventsView.model().autoCurvatures(networkModel=self.secWidget.model(),row=self.secWidget.currentIndex(),plot=plot)
 
 
 
     def connect(self):
         logger.info('connect')
         
+        self.undoStack.clear()
+        
         db = self.connectDialog.getDb()
 
         if not db.isOpen():
             db.open()
         
+        self.otherEventsView.connectToDatabase(db)
         #these work with closed/invalid database.            
         self.connectCategories(db)
         self.connectNetwork(db)
         self.connectJc(db)
-        self.connectOtherEvents(db)    
         
         if db.isOpen():#connected        
             self.setWindowTitle(db.databaseName()+' - site categorizer')       
@@ -183,7 +187,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
                 w.setEnabled(True)
                 
             self.setSecRow(self.secWidget.currentIndex())        
-            self.undoStack.clear()
  
             
         else:        
@@ -214,7 +217,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.secWidget.setModel(m)
             
         self.chWidget.setModel(m)
-        self.chainageDelegate.setModel(m)    
+        #self.chainageDelegate.setModel(m)    
         
         
         logger.info('mapper')
@@ -247,32 +250,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             self.policyModel.select()
 
 
-    def connectOtherEvents(self,db):
-        logger.info('connectOtherEvents(%s)'%(str(db)))
-        
-        if db.isOpen():
-            self.otherEventsModel = otherEventsModel.otherEventsModel(db=db,parent=self,undoStack=self.undoStack)
-        else:
-             self.otherEventsModel = None
-                   
-        self.otherEventsView.setModel(self.otherEventsModel)
-            
-        if self.otherEventsModel:
-            self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('pk'))
-            self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('sec'))
-            self.otherEventsView.hideColumn(self.otherEventsModel.fieldIndex('geom'))
-        
-            self.otherEventsView.setItemDelegateForColumn(self.otherEventsModel.fieldIndex('s_ch'), self.chainageDelegate)
-            self.otherEventsView.setItemDelegateForColumn(self.otherEventsModel.fieldIndex('e_ch'), self.chainageDelegate)
-            
-            
-    def addOtherEvent(self):
-        if self.otherEventsModel:
-            sec = self.getSec()
-            if sec:
-                #self.otherEventsModel.insert(sec)
-                c = commands.insertCommand(model=self.otherEventsModel,data={'sec':sec},description='insert')
-                self.undoStack.push(c)
                         
         
 #called when plugin closed?
@@ -334,14 +311,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.jcView.model().select()
    
            
-    def otherEventsRemove(self):
-        logger.info('otherEventsRemove()')
-
-        if self.otherEventsModel:
-            pkCol = self.otherEventsModel.fieldIndex('pk')
-            pks = [index.sibling(index.row(),pkCol).data() for index in self.otherEventsView.selectedIndexes()]
-            self.undoStack.push(commands.deleteManyCommand(model=self.otherEventsModel,pks=pks))
-
 
 #sets ch of sec_ch widget to minimum chainage of selected rows of jcView
     def setCh(self):
@@ -381,14 +350,3 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.jcView.mapToGlobal(pt)))
 
 
-    def initOtherEventsMenu(self):
-        self.otherEventsMenu = QMenu()
-        dropAct = self.otherEventsMenu.addAction('drop selected rows')
-        dropAct.triggered.connect(self.otherEventsRemove)
-
-        #setChAct = self.jc_menu.addAction('set chainage from selected rows.')
-       # setChAct.triggered.connect(self.setCh)
-
-        self.otherEventsView.setContextMenuPolicy(Qt.CustomContextMenu);
-        #self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.mapToGlobal(pt)))
-        self.otherEventsView.customContextMenuRequested.connect(lambda pt:self.otherEventsMenu.exec_(self.otherEventsView.mapToGlobal(pt)))

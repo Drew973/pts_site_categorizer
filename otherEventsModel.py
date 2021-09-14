@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 from PyQt5.QtWidgets import QUndoCommand,QUndoStack
 
-import undoDelegate
+from . import undoableTableModel
 
 
 def dbToCon(db):
@@ -18,10 +18,10 @@ def dbToCon(db):
     return psycopg2.connect(host=db.hostName(),dbname=db.databaseName(),user=db.userName(),password=db.password())
 
 
-class otherEventsModel(QSqlTableModel):
+class otherEventsModel(undoableTableModel.undoableTableModel):
     
-    def __init__(self,db,undoStack=None,parent=None):
-        super(otherEventsModel,self).__init__(db=db,parent=parent)
+    def __init__(self,db,undoStack,parent=None):
+        super().__init__(db=db,parent=parent,undoStack=undoStack)
         self.setTable('categorizing.other_events')
         self.setEditStrategy(QSqlTableModel.OnFieldChange) 
         self.setSort(self.fieldIndex('s_ch'),Qt.AscendingOrder)
@@ -35,21 +35,23 @@ class otherEventsModel(QSqlTableModel):
         self.sec = ''
 
 
+
+            
+
     def rowToPk(self,row):
         return self.index(row,self.fieldIndex('pk')).data()
+
     
+    def pkToRow(self,pk):
+        return self.find(self.fieldIndex('pk'),pk)
+
     
     def indexToPk(self,index):
         return index.sibling(index.row(),self.fieldIndex('pk')).data()
      
      
     def pkToIndex(self,pk,col):
-        return self.index(self.find(self.fieldIndex('pk'),pk),col)
- 
- 
-    def pkToRow(self,pk):
-        return self.find(self.fieldIndex('pk'),pk)
-    
+        return self.index(self.find(self.fieldIndex('pk'),pk),col) 
     
 
     def setSec(self,sec):
@@ -73,23 +75,12 @@ class otherEventsModel(QSqlTableModel):
         #return row index of sec 
         
         
-       #insert row and return pk of new row.
-    def insert(self,sec,rev=False,s_ch=0,e_ch=0,category='C'):
-        logger.info('insert(%s)'%(sec))
-        q = 'insert into categorizing.other_events(sec,reversed,s_ch,e_ch,category) values(%s,%s,%s,%s,%s) returning pk' 
-
-        with dbToCon(self.database()) as con:
-            cur = con.cursor()
-            cur.execute(q,(sec,rev,s_ch,e_ch,category))
-            
-        self.select()#change needs commiting before this
-        return  cur.fetchone()[0] #pk of new row
-    
-    
-    #inserts list of dict like. returns primary keys.
-    def insertMany(self,vals):
+    #inserts list of dict like.
+   # [{sec,rev,s_ch,e_ch,category}]
+   # returns primary keys.
+    def insert(self,vals):
         
-        #insert_batch only gets last pk. need to do as 1 query
+        #insert_batch only gets last pk. doing as 1 query
         #more efficient than insert_batch?
         with dbToCon(self.database()) as con:
             cur = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
@@ -100,19 +91,7 @@ class otherEventsModel(QSqlTableModel):
         return [v[0] for v in cur.fetchall()]
     
     
-    def delete(self,pk):
-        logger.info('delete(%s)'%(pk))
-        q = 'delete from categorizing.other_events where pk=%(pk)s RETURNING sec,reversed as rev,s_ch,e_ch,category'
-        
-        with dbToCon(self.database()) as con:
-            cur = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
-            cur.execute(q,{'pk':pk})
-        
-        self.select()#commit changes before this
-        return cur.fetchone()
-    
-    
-    def deleteMany(self,pks):
+    def delete(self,pks):
         q = 'delete from categorizing.other_events where pk = any(%(pks)s::int[]) RETURNING sec,reversed as rev,s_ch,e_ch,category'
         
         pks = ','.join([str(pk) for pk in pks])
@@ -157,9 +136,7 @@ class otherEventsModel(QSqlTableModel):
             i.plot()
             plt.show(block=False)
             
-
-
-    
+            
 
 if __name__=='__console__':
     from PyQt5.QtSql import QSqlDatabase
@@ -178,8 +155,6 @@ if __name__=='__console__':
     m.setSec('5010A000677 /00020')
     v.setModel(m)
     
-    delegate = undoDelegate.undoDelegatePk(u)
-    v.setItemDelegate(delegate)
     v.show()
     
     
@@ -187,8 +162,3 @@ if __name__=='__console__':
     #data.append({'sec':'5010A000677 /00020','rev':False,'s_ch':0, 'e_ch':0, 'category':'C'})
     
    # print(m.insertMany(data))
-  
-    
-  
-    
-  

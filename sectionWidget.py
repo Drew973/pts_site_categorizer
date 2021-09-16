@@ -6,7 +6,7 @@ Created on Fri Aug 20 08:17:59 2021
 """
 
 from qgis.gui import QgsFieldComboBox, QgsMapLayerComboBox
-import featureWidget
+from . import featureWidget,undoableComboBox
 from PyQt5.QtWidgets import QWidgetAction,QHBoxLayout,QWidget
 
 
@@ -44,7 +44,7 @@ def toWidgetAction(widget,parent=None):
     return a
     
     
-class sectionWidget(featureWidget.featureWidget):
+class sectionWidget(featureWidget.featureWidget,undoableComboBox.undoableComboBox):
     
     def __init__(self,parent=None,prefix=''):
         super().__init__(parent=parent,prefix=prefix)

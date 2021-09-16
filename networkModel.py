@@ -53,43 +53,12 @@ class networkModel(QSqlTableModel):
         return QgsGeometry.fromWkt(self.index(row,self.fieldIndex('wkt')).data())
     
     
-    #row is int
-    #ch in terms of given length
-    #crs is QgsCoordinateReferenceSystem to transform to
-    #returns qgspointxy
-    
-    def chainageToPoint(self,row,chainage,crs):
-        
-        t = QgsCoordinateTransform(QgsCoordinateReferenceSystem.fromEpsgId(27700),crs,QgsProject.instance())#documentation says only need source and destination. lies.
-            
-        #transform takes qgspointxy
-        g = self.geom(row)
-        length = self.sectionLength(row)
-        
-        if chainage<=0:
-            return t.transform(g.asPolyline()[0])#return start of line
-    
-        if chainage>=length:
-            return t.transform(g.asPolyline()[-1])#return end of line
-    
-        return t.transform(g.interpolate(g.length()*chainage/length).asPoint())
-
-    #crs is crs of point
-    def pointToChainage(self,row,point,crs):
-        t = QgsCoordinateTransform(crs,QgsCoordinateReferenceSystem.fromEpsgId(27700),QgsProject.instance())#documentation says only need source and destination. lies.
-        point = t.transform(point)
-        point = QgsGeometry().fromPointXY(point)
-        return self.geom(row).lineLocatePoint(point)*self.sectionLength(row)/self.geom(row).length()
-
 
     def get(self,row,col):
         if isinstance(col,str):
             col = self.fieldIndex(col)
         
         return self.index(row,col).data()
-
-
-
 
 #key like (row,col)
    # def __getitem__(self,key):
@@ -109,7 +78,3 @@ if __name__=='__console__':
    # v = QTableView()
    # v.setModel(m)
    # v.show()
-    
-    #m.chToPoint(0,10,iface.mapCanvas().mapSettings())
-    #get row_number with 'select sec,row_number() over (order by sec)-1 from network where sec<='5010C614 1/00090' order by sec desc limit 1'
-    

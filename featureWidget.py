@@ -213,7 +213,7 @@ class featureWidget(searchableComboBox):
 
     #attempt to select item on layer
     def selectOnLayer(self,warn=True):
-        print('select on layer')
+        logger.info('select on layer')
         data = self.itemText(self.currentIndex())
         
         layer = self.getLayer(warn)

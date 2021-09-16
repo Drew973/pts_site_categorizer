@@ -6,10 +6,11 @@ import math
 import sys
 import matplotlib.pyplot as plt
 
+import logging
 
-folder = r'C:\Users\drew.bennett\Documents\PyQgis'
-if not folder in sys.path:
-    sys.path.append(folder)
+
+logger = logging.getLogger(__name__)
+
 
 #returns dict of {x,y,ch} of vertices.
 #ch is cartesian chainage
@@ -49,7 +50,8 @@ class sectionInterpolator:
 
             self.xSpline = interpolate.UnivariateSpline(self.ch, self.x,s=s)
             self.ySpline = interpolate.UnivariateSpline(self.ch, self.y,s=s)
-        
+            
+            
     def interpolatedGeom(self,spacing):
         ch = np.append(np.arange(0,self.length,spacing),self.length)
         return QgsGeometry(QgsLineString(self.xSpline(ch),self.ySpline(ch)))
@@ -145,7 +147,14 @@ class piece:
         
 #return list of pieces where roc<threshold
 def getPieces(geom,threshold):
+    
+    logger.info('getPieces(%s,%s)',geom,threshold)
+    
     i = sectionInterpolator(geom)
+    
+    if i.xSpline is None:#not enough points
+        return []
+    
     distances = np.arange(0,max(i.ch))#every 1m. could change. accuracy vs performance?
     rocs = i.radi(distances)
     #print('distances:%s,rocs:%s'%(distances,rocs))
@@ -163,20 +172,6 @@ def getPieces(geom,threshold):
                 
     return pieces
 
-
-def autoCurvatures(geom,speed_limit):
-    if speed_limit>=50:
-        t=500
-    else:
-        t=100
-    
-    pieces = getPieces(geom,t)
-    print(pieces)
-    
-    p2= [p for p in pieces if not (p.length()<100 and p.min()>250)]
-    # short lengths, for example less than 100m, with a radius of curvature between 250m and 500m
-    print(p2)
-    
 
  
 if __name__ =='__console__':

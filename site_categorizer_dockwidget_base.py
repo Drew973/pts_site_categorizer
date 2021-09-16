@@ -36,9 +36,6 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.secWidget = sectionWidget(self.frame)
         self.secWidget.setObjectName("secWidget")
         self.horizontalLayout_2.addWidget(self.secWidget)
-        self.chWidget = chainageWidget(self.frame)
-        self.chWidget.setObjectName("chWidget")
-        self.horizontalLayout_2.addWidget(self.chWidget)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
@@ -58,9 +55,6 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.tab.setObjectName("tab")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.tab)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.otherEventsAddButton = QtWidgets.QPushButton(self.tab)
-        self.otherEventsAddButton.setObjectName("otherEventsAddButton")
-        self.verticalLayout_5.addWidget(self.otherEventsAddButton)
         self.otherEventsView = eventsView(self.tab)
         self.otherEventsView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.otherEventsView.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed)
@@ -104,7 +98,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         site_categoriserDockWidgetBase.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(site_categoriserDockWidgetBase)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(site_categoriserDockWidgetBase)
 
     def retranslateUi(self, site_categoriserDockWidgetBase):
@@ -115,7 +109,6 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.noteEdit.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>note for section.</p></body></html>"))
         self.checkedBox.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Mark section as checked.</p></body></html>"))
         self.checkedBox.setText(_translate("site_categoriserDockWidgetBase", "Checked"))
-        self.otherEventsAddButton.setText(_translate("site_categoriserDockWidgetBase", "Add empty row"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("site_categoriserDockWidgetBase", "Events"))
         self.label.setText(_translate("site_categoriserDockWidgetBase", "add:"))
         self.addBox.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Category to add.</p><p>Q1=minor junction,</p><p>Q2=major junction,</p><p>Q3=junction with roundabout</p><p>K=crossing</p></body></html>"))
@@ -126,6 +119,5 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_4), _translate("site_categoriserDockWidgetBase", "jc table"))
         self.policyView.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>policy/categories table. Where a location is affected by multiple events the event with the lower pos will take precedence. Pos should increase as irl decreases.</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), _translate("site_categoriserDockWidgetBase", "Categories"))
-from . chainageWidget import chainageWidget
 from . eventsView import eventsView
 from . sectionWidget import sectionWidget

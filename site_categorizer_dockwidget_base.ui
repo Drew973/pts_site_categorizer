@@ -38,9 +38,6 @@
             <item>
              <widget class="sectionWidget" name="secWidget"/>
             </item>
-            <item>
-             <widget class="chainageWidget" name="chWidget"/>
-            </item>
            </layout>
           </item>
           <item>
@@ -77,20 +74,13 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">
               <string>Events</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <widget class="QPushButton" name="otherEventsAddButton">
-                <property name="text">
-                 <string>Add empty row</string>
-                </property>
-               </widget>
-              </item>
               <item>
                <widget class="eventsView" name="otherEventsView">
                 <property name="contextMenuPolicy">
@@ -183,11 +173,6 @@
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>chainageWidget</class>
-   <extends>QDoubleSpinBox</extends>
-   <header>chainageWidget</header>
-  </customwidget>
   <customwidget>
    <class>sectionWidget</class>
    <extends>QComboBox</extends>

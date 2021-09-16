@@ -21,8 +21,7 @@ class eventsView(QTableView):
         self.dropAct = self.menu.addAction('drop selected rows')
         self.dropAct.triggered.connect(self.dropSelectedRows)
         
-        self.addAct = QAction('Add empty row',parent=self)
-        self.addAct.triggered.connect(self.addOtherEvent)
+
         
         
         #dropAct.triggered.connect(self.otherEventsRemove)
@@ -47,14 +46,11 @@ class eventsView(QTableView):
              self.setModel(None)        
         
         
-    def setSection(self,networkModel,row,sec):
-        self.delegate.setModel(networkModel)
-        self.delegate.setRow(row)
-        
-        
+    def setSection(self,sec,geometry,sectionLength):
         if not self.model() is None:
             self.model().setSec(sec) 
-        
+            self.delegate.setSection(geometry,sectionLength)
+            
         
     def setUndoStack(self,undoStack):
         self.undoStack = undoStack
@@ -95,27 +91,3 @@ class eventsView(QTableView):
             pks = [index.sibling(index.row(),pkCol).data() for index in self.selectedIndexes()]
             self.runUndoCommand(commands.deleteCommand(model=self.model(),pks=pks,description='delete selected rows'))
             
-
-    def addOtherEvent(self):
-        if self.model():
-            sec = self.model().sec
-            if sec:
-                #self.otherEventsModel.insert(sec)
-                self.runUndoCommand(commands.insertCommand(model=self.model(),data=[{'sec':sec,'rev':False,'s_ch':0,'e_ch':0,'category':'C'}],description='insert event'))
-            
-            
-'''
-    def edit(self,index,trigger=None,event=None):
-        if index.column() in [self.fieldIndex('s_ch'),self.fieldIndex('e_ch')]:
-            logging.info('chainageWidget required')
-            
-            self.itemDelegate(self.cw.index())
-            
-            self.cw.setIndex(index)
-            self.setIndexWidget(index,self.cw)
-            
-            return True
-        
-        else:
-            return super().edit(index,trigger,event)
-'''   

@@ -1,7 +1,7 @@
 from qgis.PyQt.QtCore import pyqtSignal,Qt,QUrl
 import os
 
-from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar,QUndoStack,QUndoCommand
+from PyQt5.QtWidgets import QDataWidgetMapper,QDockWidget,QMenu,QMessageBox,QMenuBar,QUndoStack
 
 
 from qgis.utils import iface
@@ -23,30 +23,6 @@ logger = logging.getLogger(__name__)
 
 jcCats = ['Q1','Q2','Q3','K']
 
-'''
-change row of QComboBox
-'''
-class changeRowCommand(QUndoCommand):
-
-    def __init__(self,comboBox,row,description='change row'):
-        super().__init__(description)
-        self.comboBox = comboBox
-        self.newRow = row
-        self.oldRow = self.comboBox.currentIndex()
-        logger.info('changeRowCommand.__init__;oldRow:%s;newRow:%d'%(self.oldRow,self.newRow))
-        
-        
-    def setRow(self,row):
-        self.newRow = row        
-        
-    def redo(self):
-        self.comboBox.setCurrentIndex(self.newRow)
-#        logger.info('changeRowCommand.redo;newRow:%d'%(self.newRow))
-
-    def undo(self):
-        self.comboBox.setCurrentIndex(self.oldRow)
-#        logger.info('changeRowCommand.redo;oldRow:%d'%(self.oldRow))
-        
 
 #class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
 class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
@@ -58,12 +34,9 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.setupUi(self)
         
         
-        #self.secChTool = secChWidget.secChWidget(self)
-        #self.main_widget.layout().insertWidget(0,self.secChTool)
-
-        #self.secChTool.sec_changed.connect(self.secChanged)
-
         self.mapper = QDataWidgetMapper(self)
+        self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
+        
         self.jcModel = None
         self.secRow = 0
         
@@ -77,36 +50,19 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.initTopMenu()
         self.initJcMenu()
         
-        
-        self.connectionDependent = [self.setupAct,self.addJcButton,self.secWidget,self.otherEventsAddButton,self.oneWayBox,self.noteEdit,self.checkedBox,self.addBox]
+        self.connectionDependent = [self.setupAct,self.addJcButton,self.secWidget,self.oneWayBox,self.noteEdit,self.checkedBox,self.addBox,self.otherEventsMenu]
         self.disconnected()
-        self.otherEventsAddButton.clicked.connect(self.otherEventsView.addOtherEvent)                
         
-        #self.csc = changeRowCommand(self.secWidget,row=0,description='change sec')
-       # self.secWidget.currentIndexChanged.connect(lambda row:self.undoStack.push(changeRowCommand(self.secWidget,
-             #                                                                            oldRow=self.secRow,
-                  #                                                                       newRow=row,
-                                                                                        # description='change sec')))
+        self.secWidget.setUndoStack(self.undoStack)
         self.secWidget.currentIndexChanged.connect(self.setSecRow)#happens 1st?
-        
-        #self.secWidget.currentIndexChanged.connect(self.pushChangeSecCommand)
-        
+                
         self.addJcButton.clicked.connect(self.addJc)
-        self.chWidget.setExcess(50)
-        #self.chainageDelegate = chainageDelegate.chainageDelegate(undoStack=self.undoStack,excess=50)
         self.otherEventsView.undoStack = self.undoStack
         
 
-    def onSecActivated(self,row):
-        csc = changeRowCommand()
-        self.undoStack.push(csc)
 
-
-
-#slot to be called from command
-#everything that caused secWidget.currentIndexChanged should have undo
     def setSecRow(self,row):
-        #self.csc = changeRowCommand(self.secWidget,row=0,description='change sec')
+        logger.info('setSecRow(%s)',str(row))
 
         if row <= self.secWidget.model().rowCount():
             if row!=self.secWidget.currentIndex():
@@ -117,15 +73,11 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             if self.jcModel:
                 self.jcModel.setSec(sec)
                 
-                
-            self.otherEventsView.setSection(self.secWidget.model(),row,sec)
-             
-            
-            self.mapper.setCurrentIndex (row)
-            self.chWidget.setRow(row)
-           # self.chainageDelegate.setRow(row)    
+            self.otherEventsView.setSection(sec,self.secWidget.model().geom(row),self.secWidget.model().sectionLength(row))
+            logger.info('self.mapper.setCurrentIndex')
+            self.mapper.setCurrentIndex (row)#can cause crash
+            logger.info('self.secWidget.selectOnLayer(warn=False)')
             self.secWidget.selectOnLayer(warn=False)
-            #self.otherEventsView.closeEditor()
 
 
     def initTopMenu(self):
@@ -148,21 +100,23 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         openHelpAct = helpMenu.addAction('Open help (in your default web browser)')
         openHelpAct.triggered.connect(self.openHelp)
         
+        self.otherEventsMenu = topMenu.addMenu("Events")
         
-        otherEventsMenu = topMenu.addMenu("Other Events")
+        topMenu.addMenu(self.otherEventsMenu)
         
-        otherEventsMenu.addAction(self.otherEventsView.addAct)
-        autoCurvaturesAct = otherEventsMenu.addAction('recalculate curvatures')
+        addAct = self.otherEventsMenu.addAction('Add empty row')
+        addAct.triggered.connect(lambda:self.otherEventsView.model().insertDefault())
+        
+        
+        autoCurvaturesAct = self.otherEventsMenu.addAction('recalculate curvatures')
         autoCurvaturesAct.triggered.connect(self.autoCurvatures)
-        autoCurvaturesAct2 = otherEventsMenu.addAction('recalculate curvatures and plot')
+        autoCurvaturesAct2 = self.otherEventsMenu.addAction('recalculate curvatures and plot')
         autoCurvaturesAct2.triggered.connect(lambda:self.autoCurvatures(plot=True))
 
 
     def autoCurvatures(self,plot=False):
-        
-        if self.secWidget.model().rowCount>=0 and self.otherEventsView.model():
-            self.self.otherEventsView.model().autoCurvatures(networkModel=self.secWidget.model(),row=self.secWidget.currentIndex(),plot=plot)
-
+        if self.secWidget.model().rowCount()>=0 and self.otherEventsView.model():
+            self.otherEventsView.model().autoCurvatures(networkModel=self.secWidget.model(),row=self.secWidget.currentIndex(),plot=plot)
 
 
     def connect(self):
@@ -213,25 +167,20 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         else:
             m = None
             
-        
-        self.secWidget.setModel(m)
-            
-        self.chWidget.setModel(m)
-        #self.chainageDelegate.setModel(m)    
-        
-        
-        logger.info('mapper')
+                
+        logger.info('connect mapper')
         self.mapper.setModel(m)
-        self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
             
         if m:    
             self.secWidget.setDisplayColumn(m.fieldIndex('sec'))
-            self.secWidget.setModelPKColumn(m.fieldIndex('sec'))            
+            self.secWidget.setModelPKColumn(m.fieldIndex('sec')) 
+            
             self.mapper.addMapping(self.oneWayBox,m.fieldIndex('one_way'))
             self.mapper.addMapping(self.noteEdit,m.fieldIndex('note'))
             self.mapper.addMapping(self.checkedBox,m.fieldIndex('checked'))
             
-           
+        self.secWidget.setModel(m)#triggers setSection. mapper model needs setting before this.
+        
              
     def connectCategories(self,db):
         logger.info('connectCategories(%s)'%(str(db)))
@@ -267,7 +216,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
         
     def connectJc(self,db):
-        
+        logger.info('connect jc')
         if db.isOpen():
             self.jcModel = jcModel.jcModel(parent=self,db=db)
         else:
@@ -288,9 +237,7 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         if sec and self.jcModel:
             c = commands.insertCommand(model=self.jcModel,data={'sec':sec})
             self.undoStack.push(c)
-            
-            #self.jcModel.add(sec,self.chWidget.value(),self.addBox.currentText())
-           
+                       
         
     def getSec(self):
         if not self.secWidget.model():
@@ -310,12 +257,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
 
         self.jcView.model().select()
    
-           
-
-#sets ch of sec_ch widget to minimum chainage of selected rows of jcView
-    def setCh(self):
-        self.chWidget.setValue(min([i.sibling(i.row(),1).data() for i in self.jcView.selectedIndexes()]))
-        
 
 
     def setupDatabase(self):
@@ -342,11 +283,8 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         drop_act = self.jc_menu.addAction('drop selected rows')
         drop_act.triggered.connect(self.remove)
 
-        setChAct = self.jc_menu.addAction('set chainage from selected rows.')
-        setChAct.triggered.connect(self.setCh)
-
         self.jcView.setContextMenuPolicy(Qt.CustomContextMenu);
-        #self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.mapToGlobal(pt)))
-        self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.jcView.mapToGlobal(pt)))
+        self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.mapToGlobal(pt)))
+        #self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.jcView.mapToGlobal(pt)))
 
 

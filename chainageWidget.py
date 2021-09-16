@@ -5,6 +5,8 @@ from qgis.gui import QgsMapToolEmitPoint,QgsVertexMarker
 from qgis.utils import iface
 
 
+from . import lrsFunctions
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -23,29 +25,31 @@ holding arrow only counts as 1 change.
 class chainageWidget(QDoubleSpinBox):
     
     
-    def __init__(self,parent=None,canvas=None,excess=0,model=None,row=0):
+    def __init__(self,parent=None,canvas=None,excess=0,geometry=None,sectionLength=None):
         super(chainageWidget,self).__init__(parent)
         
         if not canvas:
             canvas = iface.mapCanvas()
             
-            
         self.index = None    
+        self.excess = excess
+        
+        
         self.marker = QgsVertexMarker(canvas)
         self.marker.setIconSize(15)
         self.marker.setIconType(QgsVertexMarker.ICON_X)
         self.marker.setColor(QColor(255,0,0))
-        self.marker.setPenWidth(4) 
-        self.tool = QgsMapToolEmitPoint(canvas=canvas)
+        self.marker.setPenWidth(4)      
         
-        self.excess = excess
-        self.setModel(model)
-        self.setRow(row)
         self.setSuffix('m')
         self.setDecimals(0)
         
-        self.tool.canvasClicked.connect(self.setFromPoint)
         self.valueChanged.connect(self.onValueChanged)
+        
+        self.tool = QgsMapToolEmitPoint(canvas=canvas)
+        self.tool.canvasClicked.connect(self.setFromPoint)
+        
+        self.setSection(geometry,sectionLength)
         self.onValueChanged()
 
 
@@ -53,68 +57,37 @@ class chainageWidget(QDoubleSpinBox):
         self.index = index
         self.setValue(index.data())
         
-            
-    #delegate will pass None whilst deleting row
-   # def setValue(self,value):
-    #    logger.info('setValue(%s)'%(str(value)))
-     #   
-      #  if value is None:
-       #     value = 0
-            
-        #if self.model:
-         #   self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=value,crs=iface.mapCanvas().mapSettings().destinationCrs()))
-                 
-
-            
-       # super().setValue(value)
-            
         
     def onValueChanged(self,value=None): 
         
         if value is None:
             value = self.value()
         
-        if self.model:
-            self.marker.setCenter(self.model.chainageToPoint(row=self.row,chainage=value,crs=iface.mapCanvas().mapSettings().destinationCrs()))
-            #canvas.mapRenderer().destinationCrs() in qgis 2
-            #markers work in map crs.    
+        if self.geometry and not self.sectionLength is None:
+            self.marker.setCenter(lrsFunctions.chainageToPoint(value,self.geometry,self.sectionLength))
+            
             
         if not self.index is None:
             self.index.model().setData(self.index,value)    
     
-    
-    def setRow(self,row):
-        self.row = row
-        self.fixEnds()
-        self.setValue(0)
-        
-        
-    def fixEnds(self):
-        self.setMinimum(0-self.excess)
-        if self.model:
-            L = self.model.sectionLength(self.row)
-            if not L is None:
-                self.setMaximum(L+self.excess)
-                return
-        self.setMaximum(0)
-        
         
     def setFromPoint(self,point):
         logger.info('setFromPoint(%s)'%(point))
-        if self.model:
-            self.setValue(self.model.pointToChainage(row=self.row,point=point,crs=iface.mapCanvas().mapSettings().destinationCrs()))
-            #canvas.mapRenderer().destinationCrs() in qgis 2
-    
-    
-    def setModel(self,model):
-        logger.info('setModel(%s)'%(model))
-        self.model = model
-        self.setRow(0)
+        if self.geometry and not self.sectionLength is None:
+            self.setValue(lrsFunctions.pointToChainage(point,self.geometry,self.sectionLength))
+ 
         
-        if self.model:
-            self.setEnabled(True)
-        else:
-            self.setEnabled(False)
+    
+    def setSection(self,geometry,sectionLength):
+        self.geometry = geometry
+        self.sectionLength = sectionLength
+        self.setEnabled(True)
+        
+        if not sectionLength is None:
+            self.setMaximum(sectionLength+self.excess)
+        
+        self.setMinimum(0-self.excess)
+        self.setValue(0)
     
     
     def setLayer(self,layer):
@@ -132,7 +105,6 @@ class chainageWidget(QDoubleSpinBox):
         
     def setExcess(self,excess):
         self.excess = excess
-        self.fixEnds()
         
 
    #this happens when widget closed

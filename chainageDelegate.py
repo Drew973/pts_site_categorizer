@@ -6,7 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 from . import chainageWidget
-from . import undoDelegate
 
 
 
@@ -18,17 +17,17 @@ class chainageDelegate(QStyledItemDelegate):
     excess=excess for chainageWidget
     '''
     
-    def __init__(self,parent=None,model=None,row=None,excess=0):
+    def __init__(self,parent=None,geometry=None,sectionLength=None,excess=50):
         super().__init__(parent)
        # super(chainageDelegate,self).__init__(parent=parent,undoStack=undoStack)
         
-        self.model = model
-        self.row = row
+        self.geometry = geometry
+        self.sectionLength = sectionLength
         self.excess = excess
         
         
     def createEditor(self,parent,option,index):
-        return chainageWidget.chainageWidget(parent=parent,model=self.model,row=self.row,excess=self.excess)
+        return chainageWidget.chainageWidget(parent=parent,geometry=self.geometry,sectionLength=self.sectionLength,excess=self.excess)
     
 
     def setEditorData(self,editor,index):
@@ -40,13 +39,8 @@ class chainageDelegate(QStyledItemDelegate):
         model.setData(index,editor.value())
         
 
-    #clicking map caused widget to lose focus.
-    #model with network
-    def setModel(self,model):
-        logger.info('setModel')
-        self.model = model
-        
-        
-    # row of network model
-    def setRow(self,row):
-        self.row = row
+
+    def setSection(self,geometry,sectionLength):
+        logger.info('setSection')
+        self.geometry = geometry
+        self.sectionLength = sectionLength

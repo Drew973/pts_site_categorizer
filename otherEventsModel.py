@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 from PyQt5.QtWidgets import QUndoCommand,QUndoStack
 
-from . import undoableTableModel
+from . import undoableTableModel,commands
 
 
 def dbToCon(db):
@@ -35,8 +35,6 @@ class otherEventsModel(undoableTableModel.undoableTableModel):
         self.sec = ''
 
 
-
-            
 
     def rowToPk(self,row):
         return self.index(row,self.fieldIndex('pk')).data()
@@ -79,6 +77,8 @@ class otherEventsModel(undoableTableModel.undoableTableModel):
    # [{sec,rev,s_ch,e_ch,category}]
    # returns primary keys.
     def insert(self,vals):
+        if not vals:
+            return []
         
         #insert_batch only gets last pk. doing as 1 query
         #more efficient than insert_batch?
@@ -106,29 +106,41 @@ class otherEventsModel(undoableTableModel.undoableTableModel):
 #dictcursor result is displayed like list
 
     
+#add event using default values
+    def insertDefault(self):
+         if self.sec:
+             self.runUndoCommand(commands.insertCommand(model=self,
+                data=[{'sec':self.sec,'rev':False,'s_ch':0,'e_ch':0,'category':'C'}],description='add empty row'))
+            
+
+
     def autoCurvatures(self,row,networkModel,plot=False):
+        logger.info('autoCurvatures(%s,%s%s)',str(row),str(networkModel),str(plot))
         
         speed = float(networkModel.get(row,'speed_limit'))
+        
         sec = networkModel.get(row,'sec')
-        length = networkModel.get(row,'meas_len')
+        secLength = networkModel.get(row,'meas_len')
+        
         geom = networkModel.geom(row)
         geomLen = geom.length()
         
         if speed>=50:
             pieces = curvatures.getPieces(geom,500)
-            print(pieces)
             pieces = [p for p in pieces if not (p.length()<100 and p.min()>250)]
             
         else:
             pieces = curvatures.getPieces(geom,100)
-
-        with dbToCon(self.database()) as con:
-            q='select categorizing.add_curvature(%(sec)s,%(start)s,%(end)s)'
-            con.cursor().executemany(q,[{'sec':sec,'start':length*p.start/geomLen,'end':length*p.end/geomLen} for p in pieces])
-            
-            #convert distance to network chainage
         
-        self.select()
+        #S1 for 1 way, S2 for 2 way
+            
+        if networkModel.get(row,'one_way'):
+            d = [{'sec':sec,'rev':False,'category':'S1','s_ch':p.start*secLength/geomLen,'e_ch':p.end*secLength/geomLen} for p in pieces]
+        else:
+            d = [{'sec':sec,'rev':False,'category':'S2','s_ch':p.start*secLength/geomLen,'e_ch':p.end*secLength/geomLen} for p in pieces]
+            d += [{'sec':sec,'rev':True,'category':'S2','e_ch':p.start*secLength/geomLen,'s_ch':p.end*secLength/geomLen} for p in pieces]
+        
+        self.runUndoCommand(commands.insertCommand(model=self,data=d,description='recalculate curvatures'))
         
         if plot:
             i = curvatures.sectionInterpolator(geom)

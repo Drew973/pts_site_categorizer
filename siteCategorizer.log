@@ -1,52 +1,18 @@
 INFO:site_categorizer.featureWidget:setModel(None)
 INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F2B92828>)
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B001D71798>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F16DCF28>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F16DCF28>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001B001D1AEB8>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001B001D1AEB8>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2BA1318>)
+INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001B0027A6C18>)
 INFO:site_categorizer.featureWidget:super().setModel()
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2BA1318>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F2BA1318>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F2BA1318>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(1,<site_categorizer.networkModel.networkModel object at 0x000001D5F2BA1318>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365759.22915000002831221 429565.12624999997206032, 365737.51585000002523884 429546.81315000000176951, 365734.09004999999888241 429543.10294999997131526, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F260B168>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2895128>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2895128>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F260EC18>)
-INFO:site_categorizer.featureWidget:super().setModel()
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F260EC18>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
+INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001B0027A6C18>)
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
@@ -57,261 +23,156 @@ INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(1,<site_categorizer.networkModel.networkModel object at 0x000001D5F260EC18>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365759.22915000002831221 429565.12624999997206032, 365737.51585000002523884 429546.81315000000176951, 365734.09004999999888241 429543.10294999997131526, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F28C7D38>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F28954A8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F28954A8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2663828>)
-INFO:site_categorizer.featureWidget:super().setModel()
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2663828>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(2)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:root:setModelData(0)
-INFO:site_categorizer.otherEventsModel:autoCurvatures(1,<site_categorizer.networkModel.networkModel object at 0x000001D5F2663828>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365759.22915000002831221 429565.12624999997206032, 365737.51585000002523884 429546.81315000000176951, 365734.09004999999888241 429543.10294999997131526, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F2BE39D8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2AD7978>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2AD7978>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2BB44C8>)
-INFO:site_categorizer.featureWidget:super().setModel()
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2BB44C8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:root:setModelData(0)
-INFO:root:setModelData(0)
-INFO:root:setModelData(0)
-INFO:root:setModelData(50)
 INFO:site_categorizer.eventsView:dropSelectedRows()
-INFO:site_categorizer.commands:deleteCommand.redo();pks:[5438, 5438, 5438, 5438]
-INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A006119 1/00075', False, 50, 0, 'C']]
-INFO:site_categorizer.otherEventsModel:autoCurvatures(1,<site_categorizer.networkModel.networkModel object at 0x000001D5F2BB44C8>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365759.22915000002831221 429565.12624999997206032, 365737.51585000002523884 429546.81315000000176951, 365734.09004999999888241 429543.10294999997131526, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A006119 1/00075', 'rev': False, 'cateogry': 'S2', 's_ch': 0.0, 'e_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'cateogry': 'S2', 's_ch': 18.962697548824117, 'e_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'cateogry': 'S2', 's_ch': 42.915578663128265, 'e_ch': 48.9037989417043}, {'sec': '5010A006119 1/00075', 'rev': False, 'cateogry': 'S2', 'e_ch': 0.0, 's_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'cateogry': 'S2', 'e_ch': 18.962697548824117, 's_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'cateogry': 'S2', 'e_ch': 42.915578663128265, 's_ch': 48.9037989417043}]
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[392, 392, 392, 392]
 INFO:site_categorizer.featureWidget:setModel(None)
 INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F20445E8>)
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B061272438>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F261A668>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F261A668>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0027BB908>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0027BB908>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F204F0D8>)
+INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001B061285B88>)
 INFO:site_categorizer.featureWidget:super().setModel()
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F204F0D8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
+INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001B061285B88>)
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(1,<site_categorizer.networkModel.networkModel object at 0x000001D5F204F0D8>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365759.22915000002831221 429565.12624999997206032, 365737.51585000002523884 429546.81315000000176951, 365734.09004999999888241 429543.10294999997131526, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 0.0, 'e_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 18.962697548824117, 'e_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 42.915578663128265, 'e_ch': 48.9037989417043}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 'e_ch': 0.0, 's_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 'e_ch': 18.962697548824117, 's_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 'e_ch': 42.915578663128265, 's_ch': 48.9037989417043}]
-INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 0.0, 'e_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 18.962697548824117, 'e_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 42.915578663128265, 'e_ch': 48.9037989417043}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 'e_ch': 0.0, 's_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 'e_ch': 18.962697548824117, 's_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 'e_ch': 42.915578663128265, 's_ch': 48.9037989417043}]
-INFO:site_categorizer.commands:insertCommand.redo();data:[['5010A006119 1/00075', False, 0, 13, 'S2'], ['5010A006119 1/00075', False, 19, 41, 'S2'], ['5010A006119 1/00075', False, 43, 49, 'S2'], ['5010A006119 1/00075', False, 13, 0, 'S2'], ['5010A006119 1/00075', False, 41, 19, 'S2'], ['5010A006119 1/00075', False, 49, 43, 'S2']]
-INFO:site_categorizer.commands:insertCommand.undo();data:[['5010A006119 1/00075', False, 0, 13, 'S2'], ['5010A006119 1/00075', False, 19, 41, 'S2'], ['5010A006119 1/00075', False, 43, 49, 'S2'], ['5010A006119 1/00075', False, 13, 0, 'S2'], ['5010A006119 1/00075', False, 41, 19, 'S2'], ['5010A006119 1/00075', False, 49, 43, 'S2']]
-INFO:site_categorizer.commands:insertCommand.redo();data:[['5010A006119 1/00075', False, 0, 13, 'S2'], ['5010A006119 1/00075', False, 19, 41, 'S2'], ['5010A006119 1/00075', False, 43, 49, 'S2'], ['5010A006119 1/00075', False, 13, 0, 'S2'], ['5010A006119 1/00075', False, 41, 19, 'S2'], ['5010A006119 1/00075', False, 49, 43, 'S2']]
-INFO:site_categorizer.commands:insertCommand.undo();data:[['5010A006119 1/00075', False, 0, 13, 'S2'], ['5010A006119 1/00075', False, 19, 41, 'S2'], ['5010A006119 1/00075', False, 43, 49, 'S2'], ['5010A006119 1/00075', False, 13, 0, 'S2'], ['5010A006119 1/00075', False, 41, 19, 'S2'], ['5010A006119 1/00075', False, 49, 43, 'S2']]
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[540, 540, 540, 540]
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A000677 /00020', 0, 75, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,75,'C') returning pk;
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[540, 540, 540, 540]
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[204, 204, 204, 204]
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A000677 /00020', 75, 0, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',75,0,'C') returning pk;
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[]
+INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[949, 949, 949, 949]
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A000677 /00020', 0, 0, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[951]
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[950, 950, 950, 950]
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A000677 /00020', 0, 0, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[952, 952, 952, 952]
+INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
+INFO:site_categorizer.commands:insertCommand.redo();data:[['5010A000677 /00020', 0, 0, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.otherEventsModel:insert() query=insert into categorizing.events(sec,s_ch,e_ch,category) VALUES ('5010A000677 /00020',0,0,'C') returning pk;
+INFO:site_categorizer.commands:insertCommand.undo();data:[['5010A000677 /00020', 0, 0, 'C']]
 INFO:site_categorizer.featureWidget:setModel(None)
 INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F2663558>)
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B0612DE3A8>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F16DC0B8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F16DC0B8>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0027BB5F8>)
+INFO:site_categorizer.featureWidget:setModel(None)
+INFO:site_categorizer.featureWidget:reset model
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B06176FDC8>)
+INFO:site_categorizer.site_categorizer_dockwidget:connect
+INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001B061299D68>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001B061299D68>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5D3A50798>)
+INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001B0617725E8>)
 INFO:site_categorizer.featureWidget:super().setModel()
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5D3A50798>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
+INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001B0617725E8>)
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(1,<site_categorizer.networkModel.networkModel object at 0x000001D5D3A50798>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365759.22915000002831221 429565.12624999997206032, 365737.51585000002523884 429546.81315000000176951, 365734.09004999999888241 429543.10294999997131526, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 0.0, 'e_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 18.962697548824117, 'e_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': False, 'category': 'S2', 's_ch': 42.915578663128265, 'e_ch': 48.9037989417043}, {'sec': '5010A006119 1/00075', 'rev': True, 'category': 'S2', 'e_ch': 0.0, 's_ch': 12.97447727024808}, {'sec': '5010A006119 1/00075', 'rev': True, 'category': 'S2', 'e_ch': 18.962697548824117, 's_ch': 40.91950523693625}, {'sec': '5010A006119 1/00075', 'rev': True, 'category': 'S2', 'e_ch': 42.915578663128265, 's_ch': 48.9037989417043}]
-INFO:root:setModelData(19)
-INFO:root:setModelData(41)
-INFO:root:setModelData(50)
-INFO:root:setModelData(0)
-INFO:root:setModelData(0)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280661.06430794356856495 7125013.64769332204014063)>)
-INFO:root:setModelData(49)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280651.56180436437716708 7124985.69915338326245546)>)
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(3)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(398)
+INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(398,<site_categorizer.networkModel.networkModel object at 0x000001D5D3A50798>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365829.99390000000130385 428388.99869999999646097, 365877.01010000001406297 428392.17979999998351559, 365935.20705000002635643 428396.12920000002486631, 366015.21704999997746199 428394.90590000001247972, 366031.76400000002468005 428391.61625000002095476, 366057.14915000001201406 428386.63270000001648441, 366075.10590000002412125 428383.06030000001192093, 366096.09015000000363216 428373.00024999998277053, 366128.03885000001173466 428358.05089999997289851, 366144.86790000001201406 428357.29885000002104789, 366150.13294999999925494 428357.11099999997531995, 366163.10710000002291054 428364.63280000002123415, 366178.52600000001257285 428373.94014999998034909, 366203.15899999998509884 428381.27409999998053536, 366237.94585000001825392 428391.52199999999720603, 366258.81809999997494742 428397.63329999998677522, 366278.93784999998752028 428403.08614999998826534, 366322.09004999999888241 428414.58984999998938292, 366341.69004999997559935 428423.81010000000242144, 366351.896049999981...>,100)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010C619 0/00050', 'rev': False, 'category': 'S2', 's_ch': 298.4189922706841, 'e_ch': 340.337379144827}, {'sec': '5010C619 0/00050', 'rev': True, 'category': 'S2', 'e_ch': 298.4189922706841, 's_ch': 340.337379144827}]
-INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010C619 0/00050', 'rev': False, 'category': 'S2', 's_ch': 298.4189922706841, 'e_ch': 340.337379144827}, {'sec': '5010C619 0/00050', 'rev': True, 'category': 'S2', 'e_ch': 298.4189922706841, 's_ch': 340.337379144827}]
-INFO:site_categorizer.otherEventsModel:autoCurvatures(398,<site_categorizer.networkModel.networkModel object at 0x000001D5D3A50798>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365829.99390000000130385 428388.99869999999646097, 365877.01010000001406297 428392.17979999998351559, 365935.20705000002635643 428396.12920000002486631, 366015.21704999997746199 428394.90590000001247972, 366031.76400000002468005 428391.61625000002095476, 366057.14915000001201406 428386.63270000001648441, 366075.10590000002412125 428383.06030000001192093, 366096.09015000000363216 428373.00024999998277053, 366128.03885000001173466 428358.05089999997289851, 366144.86790000001201406 428357.29885000002104789, 366150.13294999999925494 428357.11099999997531995, 366163.10710000002291054 428364.63280000002123415, 366178.52600000001257285 428373.94014999998034909, 366203.15899999998509884 428381.27409999998053536, 366237.94585000001825392 428391.52199999999720603, 366258.81809999997494742 428397.63329999998677522, 366278.93784999998752028 428403.08614999998826534, 366322.09004999999888241 428414.58984999998938292, 366341.69004999997559935 428423.81010000000242144, 366351.896049999981...>,100)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010C619 0/00050', 'rev': False, 'category': 'S2', 's_ch': 298.4189922706841, 'e_ch': 340.337379144827}, {'sec': '5010C619 0/00050', 'rev': True, 'category': 'S2', 'e_ch': 298.4189922706841, 's_ch': 340.337379144827}]
-INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010C619 0/00050', 'rev': False, 'category': 'S2', 's_ch': 298.4189922706841, 'e_ch': 340.337379144827}, {'sec': '5010C619 0/00050', 'rev': True, 'category': 'S2', 'e_ch': 298.4189922706841, 's_ch': 340.337379144827}]
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[28, 28, 28, 28]
+INFO:site_categorizer.eventsView:dropSelectedRows()
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[756, 756, 756, 756]
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A006119 1/00075', 49, 0, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A006119 1/00075', 0, 49, 'C']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[957]
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[956]
 INFO:site_categorizer.featureWidget:setModel(None)
 INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5D3A509D8>)
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B061697B88>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F16A2F98>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F16A2F98>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0619A8048>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0619A8048>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5D3A69828>)
+INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001B0027CC168>)
 INFO:site_categorizer.featureWidget:super().setModel()
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5D3A69828>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
+INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001B0027CC168>)
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(398)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(398,<site_categorizer.networkModel.networkModel object at 0x000001D5D3A69828>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365829.99390000000130385 428388.99869999999646097, 365877.01010000001406297 428392.17979999998351559, 365935.20705000002635643 428396.12920000002486631, 366015.21704999997746199 428394.90590000001247972, 366031.76400000002468005 428391.61625000002095476, 366057.14915000001201406 428386.63270000001648441, 366075.10590000002412125 428383.06030000001192093, 366096.09015000000363216 428373.00024999998277053, 366128.03885000001173466 428358.05089999997289851, 366144.86790000001201406 428357.29885000002104789, 366150.13294999999925494 428357.11099999997531995, 366163.10710000002291054 428364.63280000002123415, 366178.52600000001257285 428373.94014999998034909, 366203.15899999998509884 428381.27409999998053536, 366237.94585000001825392 428391.52199999999720603, 366258.81809999997494742 428397.63329999998677522, 366278.93784999998752028 428403.08614999998826534, 366322.09004999999888241 428414.58984999998938292, 366341.69004999997559935 428423.81010000000242144, 366351.896049999981...>,100)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010C619 0/00050', 'rev': False, 'category': 'S2', 's_ch': 298.4189922706841, 'e_ch': 340.337379144827}, {'sec': '5010C619 0/00050', 'rev': True, 'category': 'S2', 'e_ch': 298.4189922706841, 's_ch': 340.337379144827}]
-INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010C619 0/00050', 'rev': False, 'category': 'S2', 's_ch': 298.4189922706841, 'e_ch': 340.337379144827}, {'sec': '5010C619 0/00050', 'rev': True, 'category': 'S2', 'e_ch': 298.4189922706841, 's_ch': 340.337379144827}]
-INFO:site_categorizer.commands:insertCommand.redo();data:[['5010C619 0/00050', False, 298, 340, 'S2'], ['5010C619 0/00050', True, 340, 298, 'S2']]
-INFO:site_categorizer.commands:insertCommand.undo();data:[['5010C619 0/00050', False, 298, 340, 'S2'], ['5010C619 0/00050', True, 340, 298, 'S2']]
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5D3A69828>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5D3A69828>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
+INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s
+INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
 INFO:site_categorizer.featureWidget:setModel(None)
 INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F24F4708>)
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B051B64CA8>)
+INFO:site_categorizer.featureWidget:setModel(None)
+INFO:site_categorizer.featureWidget:reset model
+INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001B061272288>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484588>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484588>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0027BB978>)
+INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001B0027BB978>)
 INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F24F91F8>)
+INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001B06127C678>)
 INFO:site_categorizer.featureWidget:super().setModel()
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F24F91F8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F24F91F8>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484518>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484518>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F24F94C8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484518>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484518>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F24F9318>)
-INFO:site_categorizer.featureWidget:super().setModel()
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F24F9318>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
+INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001B06127C678>)
 INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
@@ -327,127 +188,12 @@ INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F24F9318>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5ED6A33A8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F29C50B8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F29C50B8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F251D948>)
-INFO:site_categorizer.featureWidget:super().setModel()
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
+INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(1)
 INFO:site_categorizer.chainageDelegate:setSection
 INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
 INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
 INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F251D948>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F251D948>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F251D948>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.commands:insertCommand.undo();data:[]
-INFO:site_categorizer.commands:insertCommand.undo();data:[]
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.otherEventsModel:autoCurvatures(0,<site_categorizer.networkModel.networkModel object at 0x000001D5F251D948>False)
-INFO:curvatures:getPieces(<QgsGeometry: LineString (365666.52535000001080334 429559.01169999997364357, 365734.98009999998612329 429527.48670000000856817)>,500)
-INFO:site_categorizer.commands:insertCommand.redo();data:[]
-INFO:site_categorizer.commands:insertCommand.undo();data:[]
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280727.76797219982836396 7125047.60248233657330275)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280770.52668027789331973 7125061.26763646490871906)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280740.55150348087772727 7125051.34937943704426289)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280717.18849803617922589 7125043.41477381438016891)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280679.27871561649953946 7125024.68028831668198109)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280669.8012700115214102 7125019.17014552280306816)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280698.89482396154198796 7125033.937328209169209)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280773.83276595396455377 7125066.00635926797986031)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280758.07375756441615522 7125059.39418791607022285)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280744.95961771573638543 7125055.31668224837630987)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280678.72770133707672358 7125025.89251972921192646)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280681.15216416626935825 7125025.67211401928216219)>)
-INFO:root:setModelData(0)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280762.04106037580640987 7125061.81865074299275875)>)
-INFO:root:setModelData(10)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280783.64082012657308951 7125076.14502200670540333)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280685.78068411286221817 7125026.55373686458915472)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280714.43342663941439241 7125040.65970241650938988)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280716.63748375681461766 7125044.84741093963384628)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280674.76039852574467659 7125023.90886832401156425)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280715.97626662161201239 7125059.17378220241516829)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280727.87817505572456867 7125041.10051384009420872)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280669.25025573221500963 7125017.73750839475542307)>)
-INFO:root:setModelData(52)
-INFO:root:setModelData(67)
-INFO:root:setModelData(52)
-INFO:root:setModelData(0)
-INFO:root:setModelData(75)
-INFO:root:setModelData(52)
-INFO:root:setModelData(67)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280686.22149553621420637 7125024.12927403580397367)>)
-INFO:root:setModelData(60)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280643.46278745820745826 7125007.37843994330614805)>)
-INFO:root:setModelData(52)
-INFO:root:setModelData(75)
-INFO:root:setModelData(0)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280651.39739308092975989 7125012.88858273718506098)>)
-INFO:root:setModelData(75)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280777.91027162107639015 7125076.36542771942913532)>)
-INFO:root:setModelData(52)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280775.92662021541036665 7125082.75719335954636335)>)
-INFO:root:setModelData(75)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280636.85061610594857484 7124998.34180576261132956)>)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280667.70741574984276667 7125017.95791410841047764)>)
-INFO:root:setModelData(75)
-INFO:root:setModelData(75)
-INFO:root:setModelData(0)
-INFO:root:setModelData(75)
-INFO:root:setModelData(0)
-INFO:site_categorizer.commands:insertCommand.redo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
-INFO:site_categorizer.commands:insertCommand.undo();data:[{'sec': '5010A000677 /00020', 'rev': False, 's_ch': 0, 'e_ch': 0, 'category': 'C'}]
 INFO:site_categorizer.eventsView:dropSelectedRows()
-INFO:site_categorizer.commands:deleteCommand.redo();pks:[]
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F29CD0D8>)
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F24F91F8>)
-INFO:site_categorizer.featureWidget:setModel(None)
-INFO:site_categorizer.featureWidget:reset model
-INFO:site_categorizer.featureWidget:finished setModel(<PyQt5.QtCore.QStringListModel object at 0x000001D5F2A02288>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect
-INFO:site_categorizer.site_categorizer_dockwidget:connectCategories(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484668>)
-INFO:site_categorizer.site_categorizer_dockwidget:connectNetwork(<PyQt5.QtSql.QSqlDatabase object at 0x000001D5F2484668>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect mapper
-INFO:site_categorizer.featureWidget:setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2A3DAF8>)
-INFO:site_categorizer.featureWidget:super().setModel()
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:site_categorizer.featureWidget:finished setModel(<site_categorizer.networkModel.networkModel object at 0x000001D5F2A3DAF8>)
-INFO:site_categorizer.site_categorizer_dockwidget:connect jc
-INFO:site_categorizer.site_categorizer_dockwidget:setSecRow(0)
-INFO:site_categorizer.chainageDelegate:setSection
-INFO:site_categorizer.site_categorizer_dockwidget:self.mapper.setCurrentIndex
-INFO:site_categorizer.site_categorizer_dockwidget:self.secWidget.selectOnLayer(warn=False)
-INFO:site_categorizer.featureWidget:select on layer
-INFO:root:setModelData(0)
-INFO:root:setModelData(75)
-INFO:root:setModelData(75)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280669.48819371632998809 7125019.30163756851106882)>)
-INFO:root:setModelData(70)
-INFO:site_categorizer.chainageWidget:setFromPoint(<QgsPointXY: POINT(-280644.79273555974941701 7125019.94031321071088314)>)
+INFO:site_categorizer.commands:deleteCommand.redo();pks:[47, 47, 47, 47, 55, 55, 55, 55, 48, 48, 48, 48]
+INFO:site_categorizer.commands:deleteManyCommand.undo();data:[['5010A006119 1/00075', 0, 13, 'S2'], ['5010A006119 1/00075', 19, 41, 'S2'], ['5010A006119 1/00075', 13, 0, 'S2']]
+INFO:site_categorizer.otherEventsModel:%(sec)s,%(s_ch)s,%(e_ch)s,%(category)s

@@ -63,27 +63,6 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.otherEventsView.setObjectName("otherEventsView")
         self.verticalLayout_5.addWidget(self.otherEventsView)
         self.tabWidget.addTab(self.tab, "")
-        self.tab_4 = QtWidgets.QWidget()
-        self.tab_4.setObjectName("tab_4")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab_4)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label = QtWidgets.QLabel(self.tab_4)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
-        self.addBox = QtWidgets.QComboBox(self.tab_4)
-        self.addBox.setObjectName("addBox")
-        self.horizontalLayout.addWidget(self.addBox)
-        self.addJcButton = QtWidgets.QPushButton(self.tab_4)
-        self.addJcButton.setObjectName("addJcButton")
-        self.horizontalLayout.addWidget(self.addJcButton)
-        self.verticalLayout_6.addLayout(self.horizontalLayout)
-        self.jcView = QtWidgets.QTableView(self.tab_4)
-        self.jcView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.jcView.setObjectName("jcView")
-        self.verticalLayout_6.addWidget(self.jcView)
-        self.tabWidget.addTab(self.tab_4, "")
         self.widget = QtWidgets.QWidget()
         self.widget.setObjectName("widget")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget)
@@ -98,7 +77,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         site_categoriserDockWidgetBase.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(site_categoriserDockWidgetBase)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(site_categoriserDockWidgetBase)
 
     def retranslateUi(self, site_categoriserDockWidgetBase):
@@ -110,14 +89,7 @@ class Ui_site_categoriserDockWidgetBase(object):
         self.checkedBox.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Mark section as checked.</p></body></html>"))
         self.checkedBox.setText(_translate("site_categoriserDockWidgetBase", "Checked"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("site_categoriserDockWidgetBase", "Events"))
-        self.label.setText(_translate("site_categoriserDockWidgetBase", "add:"))
-        self.addBox.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Category to add.</p><p>Q1=minor junction,</p><p>Q2=major junction,</p><p>Q3=junction with roundabout</p><p>K=crossing</p></body></html>"))
-        self.addJcButton.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Add junction or crossing with selected section,chainage and category.</p></body></html>"))
-        self.addJcButton.setText(_translate("site_categoriserDockWidgetBase", "Add"))
-        self.jcView.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>Junctions and crossings table. right click on rows for options. </p><p>&lt;50m before section should be added with negative chainage. </p><p>&lt;50m after section with chainage&gt;section length.</p></body></html>"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("site_categoriserDockWidgetBase", "Junctions/Crossings"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_4), _translate("site_categoriserDockWidgetBase", "jc table"))
         self.policyView.setToolTip(_translate("site_categoriserDockWidgetBase", "<html><head/><body><p>policy/categories table. Where a location is affected by multiple events the event with the lower pos will take precedence. Pos should increase as irl decreases.</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), _translate("site_categoriserDockWidgetBase", "Categories"))
-from . eventsView import eventsView
-from . sectionWidget import sectionWidget
+from .eventsView import eventsView
+from .sectionWidget import sectionWidget

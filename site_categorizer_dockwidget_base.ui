@@ -74,7 +74,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">
@@ -94,54 +94,6 @@
                 </property>
                 <property name="sortingEnabled">
                  <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_4">
-             <attribute name="title">
-              <string>Junctions/Crossings</string>
-             </attribute>
-             <attribute name="toolTip">
-              <string>jc table</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_6">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout">
-                <item>
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>add:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="addBox">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Category to add.&lt;/p&gt;&lt;p&gt;Q1=minor junction,&lt;/p&gt;&lt;p&gt;Q2=major junction,&lt;/p&gt;&lt;p&gt;Q3=junction with roundabout&lt;/p&gt;&lt;p&gt;K=crossing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="addJcButton">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add junction or crossing with selected section,chainage and category.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="text">
-                   <string>Add</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QTableView" name="jcView">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Junctions and crossings table. right click on rows for options. &lt;/p&gt;&lt;p&gt;&amp;lt;50m before section should be added with negative chainage. &lt;/p&gt;&lt;p&gt;&amp;lt;50m after section with chainage&amp;gt;section length.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="selectionBehavior">
-                 <enum>QAbstractItemView::SelectRows</enum>
                 </property>
                </widget>
               </item>

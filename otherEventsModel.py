@@ -18,11 +18,13 @@ def dbToCon(db):
     return psycopg2.connect(host=db.hostName(),dbname=db.databaseName(),user=db.userName(),password=db.password())
 
 
+COLS = ['sec','s_ch','e_ch','category']
+
 class otherEventsModel(undoableTableModel.undoableTableModel):
     
     def __init__(self,db,undoStack,parent=None):
         super().__init__(db=db,parent=parent,undoStack=undoStack)
-        self.setTable('categorizing.other_events')
+        self.setTable('categorizing.events')
         self.setEditStrategy(QSqlTableModel.OnFieldChange) 
         self.setSort(self.fieldIndex('s_ch'),Qt.AscendingOrder)
         self.setFilter("sec=''")
@@ -34,7 +36,7 @@ class otherEventsModel(undoableTableModel.undoableTableModel):
         self.undoStack = undoStack
         self.sec = ''
 
-
+        
 
     def rowToPk(self,row):
         return self.index(row,self.fieldIndex('pk')).data()
@@ -84,15 +86,18 @@ class otherEventsModel(undoableTableModel.undoableTableModel):
         #more efficient than insert_batch?
         with dbToCon(self.database()) as con:
             cur = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
-            args_str = ','.join([cur.mogrify("(%(sec)s,%(rev)s,%(s_ch)s,%(e_ch)s,%(category)s)",val).decode() for val in vals])
-            cur.execute("insert into categorizing.other_events(sec,reversed,s_ch,e_ch,category) VALUES "+args_str +' returning pk;')
-        
+            a = ','.join(['%('+col+')s' for col in COLS ])
+            logger.info(a)
+            args_str = ','.join([cur.mogrify("("+a+")",val).decode() for val in vals])
+            q = "insert into categorizing.events(%s) VALUES %s returning pk;"%(','.join(COLS),args_str)
+            cur.execute(q)
+                    
         self.select()
         return [v[0] for v in cur.fetchall()]
     
     
     def delete(self,pks):
-        q = 'delete from categorizing.other_events where pk = any(%(pks)s::int[]) RETURNING sec,reversed as rev,s_ch,e_ch,category'
+        q = 'delete from categorizing.events where pk = any(%(pks)s::int[]) RETURNING ' + ','.join(COLS)
         
         pks = ','.join([str(pk) for pk in pks])
         pks='{'+pks+'}'

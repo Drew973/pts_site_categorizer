@@ -8,7 +8,7 @@ from qgis.utils import iface
 from qgis.PyQt.QtSql import QSqlTableModel
 from PyQt5.QtGui import QDesktopServices
 
-from . import networkModel,jcModel,otherEventsModel,delegates,databaseFunctions,databaseDialog,commands,chainageDelegate
+from . import networkModel,otherEventsModel,delegates,databaseFunctions,databaseDialog,commands,chainageDelegate
 
 from .site_categorizer_dockwidget_base import Ui_site_categoriserDockWidgetBase
 
@@ -20,8 +20,6 @@ logging.basicConfig(filename=r'C:\Users\drew.bennett\AppData\Roaming\QGIS\QGIS3\
 
 logger = logging.getLogger(__name__)
 
-
-jcCats = ['Q1','Q2','Q3','K']
 
 
 #class site_categoriserDockWidget(QDockWidget,FORM_CLASS):
@@ -37,26 +35,21 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         self.mapper = QDataWidgetMapper(self)
         self.mapper.setSubmitPolicy(QDataWidgetMapper.AutoSubmit)
         
-        self.jcModel = None
         self.secRow = 0
         
-        self.addBox.addItems(jcCats)
-
         self.undoStack = QUndoStack(self)
         
         self.connectDialog = databaseDialog.databaseDialog(parent=self,name='site_categorizer_database')
         self.connectDialog.accepted.connect(self.connect)
         
         self.initTopMenu()
-        self.initJcMenu()
         
-        self.connectionDependent = [self.setupAct,self.addJcButton,self.secWidget,self.oneWayBox,self.noteEdit,self.checkedBox,self.addBox,self.otherEventsMenu]
+        self.connectionDependent = [self.setupAct,self.secWidget,self.oneWayBox,self.noteEdit,self.checkedBox,self.otherEventsMenu]
         self.disconnected()
         
         self.secWidget.setUndoStack(self.undoStack)
         self.secWidget.currentIndexChanged.connect(self.setSecRow)#happens 1st?
                 
-        self.addJcButton.clicked.connect(self.addJc)
         self.otherEventsView.undoStack = self.undoStack
         
 
@@ -70,8 +63,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             
             sec = self.secWidget.itemText(row)
             
-            if self.jcModel:
-                self.jcModel.setSec(sec)
                 
             self.otherEventsView.setSection(sec,self.secWidget.model().geom(row),self.secWidget.model().sectionLength(row))
             logger.info('self.mapper.setCurrentIndex')
@@ -133,7 +124,6 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         #these work with closed/invalid database.            
         self.connectCategories(db)
         self.connectNetwork(db)
-        self.connectJc(db)
         
         if db.isOpen():#connected        
             self.setWindowTitle(db.databaseName()+' - site categorizer')       
@@ -199,13 +189,14 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
             self.policyModel.select()
 
 
-                        
+        self.otherEventsView.setItemDelegateForColumn(self.otherEventsView.fieldIndex('category'),
+            delegates.comboboxDelegate(self.otherEventsView,self.policyModel,self.policyModel.fieldIndex('cat')))
+
         
 #called when plugin closed?
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
-
 
         
 #opens help/index.html in default browser
@@ -214,50 +205,13 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
         help_path = 'file:///'+os.path.abspath(help_path)
         QDesktopServices.openUrl(QUrl(help_path))
 
-        
-    def connectJc(self,db):
-        logger.info('connect jc')
-        if db.isOpen():
-            self.jcModel = jcModel.jcModel(parent=self,db=db)
-        else:
-             self.jcModel = None
-             
-        self.jcView.setModel(self.jcModel)
-        
-        if self.jcModel:
-            self.jcView.hideColumn(self.jcModel.fieldIndex('geom'))
-            self.jcView.hideColumn(self.jcModel.fieldIndex('pk'))
-            self.jcModel.dataChanged.connect(lambda:self.jcModel.process(sec=self.secChTool.current_sec()))#reprocess section when jc table changed.
-            self.jcView.setItemDelegateForColumn(self.jcModel.fieldIndex('category'),delegates.comboboxDelegate(self,items=jcCats))
-
-       
-    def addJc(self):
-        sec = self.getSec()
-        
-        if sec and self.jcModel:
-            c = commands.insertCommand(model=self.jcModel,data={'sec':sec})
-            self.undoStack.push(c)
-                       
-        
+                     
     def getSec(self):
         if not self.secWidget.model():
             iface.messageBar().pushMessage("site_categorizer: not connected to database.",duration=4)
         else:
             return self.secWidget.getCurrentPK()
-
-    
-    
-    def remove(self):
-        rows = []
-        for index in self.jcView.selectedIndexes():
-            rows.append(index.row())
-        rows.sort(reverse=True)
-        for row in rows:
-            self.jcView.model().removeRow(row, self.jcView.rootIndex())
-
-        self.jcView.model().select()
    
-
 
     def setupDatabase(self):
         msgBox=QMessageBox();
@@ -275,16 +229,5 @@ class site_categoriserDockWidget(QDockWidget,Ui_site_categoriserDockWidgetBase):
                 databaseFunctions.runSetupFile(cur=con.cursor(),file=file,printCom=True,recursive=False)
                 
             iface.messageBar().pushMessage("site_categoriser: prepared database",duration=4)
-
-
-#for requested view
-    def initJcMenu(self):
-        self.jc_menu = QMenu()
-        drop_act = self.jc_menu.addAction('drop selected rows')
-        drop_act.triggered.connect(self.remove)
-
-        self.jcView.setContextMenuPolicy(Qt.CustomContextMenu);
-        self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.mapToGlobal(pt)))
-        #self.jcView.customContextMenuRequested.connect(lambda pt:self.jc_menu.exec_(self.jcView.mapToGlobal(pt)))
 
 

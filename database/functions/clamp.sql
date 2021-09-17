@@ -11,3 +11,9 @@ CREATE OR REPLACE FUNCTION clamp(val float,minimum float,maximum float)
 returns float as $$
 			select least(greatest(val,minimum),maximum)
 $$ LANGUAGE sql IMMUTABLE;
+
+
+CREATE OR REPLACE FUNCTION clamp(val int,minimum int,maximum int) 
+returns int as $$
+			select least(greatest(val,minimum),maximum)
+$$ LANGUAGE sql IMMUTABLE;

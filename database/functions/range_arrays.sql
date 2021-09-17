@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION range_array_remove(a int8range[],r int8range) returns
 	'select array(select unnest from unnest(a) where not r&&unnest)' 
 	LANGUAGE sql IMMUTABLE;	
 --select distinct_ranges
-									
+
 
 CREATE OR REPLACE FUNCTION range_array_single_intersection(ranges int8range[]) 
 RETURNS int8range as $$										   
@@ -130,6 +130,24 @@ RETURNS int8range[] as
 select array(select unnest*b from unnest(a) where unnest&&b)
 '			
 LANGUAGE sql IMMUTABLE;
+
+
+
+
+CREATE OR REPLACE FUNCTION range_array_split(rgs int8range[]) 
+RETURNS int8range[] as								   
+$$
+with a as (select unnest as rg from unnest(rgs))
+, b as (select lower(rg) as n from a union select upper(rg) from a)
+, c as (select n,lead(n) over (order by n) from b)
+, d as (select int8range(n,lead) as rg from c where not lead is null)
+select array(select rg from d)
+$$			
+LANGUAGE sql IMMUTABLE;
+
+
+--select range_array_split('{"[449,472]","[449,472]","[382,386]","[382,386]"}'::int8range[])
+
 
 
 

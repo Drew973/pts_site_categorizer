@@ -1,3 +1,6 @@
+--requires network table,clamp
+
+
 CREATE OR REPLACE FUNCTION meas_len(sect varchar) RETURNS float AS
 'SELECT cast(meas_len as float) from categorizing.network where sec=sect' LANGUAGE sql IMMUTABLE;
 
@@ -132,83 +135,72 @@ RETURNS bool AS $$
 $$ LANGUAGE plpgsql;
 
 
---part of linestring  from start_ch to end_ch. len=noninal length. chainages in terms of nominal length
 
-CREATE OR REPLACE FUNCTION make_line(L geometry('linestring'),len float,start_ch float,end_ch float) 
-RETURNS geometry('linestring') AS $$
-		declare
-			f1 float;
-			f2 float;
-			r geometry;
-        BEGIN	
-				f1=start_ch/len;
-				f2=end_ch/len;
-				
-				if f1<0 then
-					f1=0;
-				end if;
-				
-				if f1>1 then
-					f1=1;
-				end if; 
-
-				if f2>1 then
-					f2=1;
-				end if; 
-
-				if f2<0 then
-					f2=0;
-				end if; 
-				
-				if f2=f1 then
-					raise notice 'f2=f1';
-					return null;
-				end if;
-
-				if f2>f1 then
-					r= ST_LineSubstring(L,f1,f2);
-				else
-					r= st_reverse(ST_LineSubstring(L,f2,f1));
-				end if;
-						
-				if st_geometryType(r)!='ST_LineString' then
-					raise warning 'make_line(%,%,%,%) returned %',st_asText(L),len,start_ch,end_ch,st_geometryType(r);
-				end if;
-										   
-				return r;							   
-												   
-		END;			
-$$ LANGUAGE plpgsql;
-													   
-
---returns linestring from start_ch to end_ch of section, start_ch and end_ch in terms of meas_len.
-													   					
-CREATE OR REPLACE FUNCTION get_line(sect varchar,start_ch float,end_ch float) 
+CREATE OR REPLACE FUNCTION get_line(sect varchar,start_ch numeric,end_ch numeric) 
 RETURNS geometry('linestring',27700) AS $$
 		declare g geometry=geom from categorizing.network  where sec=sect;
 		len float=meas_len(sect);
-        BEGIN	
+        
+		BEGIN	
+			if g is null then 
+				raise warning 'get line(%,%,%); section not found',sect,start_ch,end_ch;
+				return null; 
+			end if;
+			
 			if start_ch=end_ch then
-				--raise warning 'get line(%,%,%) start_ch=end_ch',sect,start_ch,end_ch;
+				raise warning 'get line(%,%,%); start_ch=end_ch',sect,start_ch,end_ch;
 				return null;
 			end if;
 		
-			if start_ch>len then
-				raise warning 'get line(%,%,%) start_ch>section length %',sect,start_ch,end_ch,len;
+			if not (numrange(0,len::numeric)@>start_ch and numrange(0,len::numeric)@>end_ch) then
+				raise warning 'get line(%,%,%); values out of bounds',sect,start_ch,end_ch;
+			end if;
+	
+			if start_ch<end_ch then
+				return ST_LineSubstring(g,clamp(start_ch/len,0,1),clamp(end_ch/len,0,1));
 			end if;
 
-
-			if end_ch>len then
-				--raise warning 'get line(%,%,%) end chainage>section length %',sect,start_ch,end_ch,len;
+			if start_ch>end_ch then
+				return ST_reverse(ST_LineSubstring(g,clamp(end_ch/len,0,1),clamp(start_ch/len,0,1)));
 			end if;
 
-			if st_geometrytype(make_line(g,len,start_ch,end_ch))!='ST_LineString' then
-				--raise warning 'get line(%,%,%) returned wrong type',sect,start_ch,end_ch;
-				--raise warning 'make_line(%,%,%,%) returned wrong type',st_asText(g),len,start_ch,end_ch;
-				return null;
-			end if;
+			return null;
 		
-		
-		return make_line(g,len,start_ch,end_ch);
+		--return make_line(g,len,start_ch,end_ch);
 		END;			
-$$ LANGUAGE plpgsql;	
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_line(sect varchar,start_ch int,end_ch int) 
+RETURNS geometry('linestring',27700) AS $$
+		declare g geometry=geom from categorizing.network  where sec=sect;
+		len float=meas_len(sect);
+        
+		BEGIN	
+			if g is null then 
+				raise warning 'get line(%,%,%); section not found',sect,start_ch,end_ch;
+				return null; 
+			end if;
+			
+			if start_ch=end_ch then
+				raise warning 'get line(%,%,%); start_ch=end_ch',sect,start_ch,end_ch;
+				return null;
+			end if;
+		
+			if not (numrange(0,len::numeric)@>start_ch and numrange(0,len::numeric)@>end_ch) then
+				raise warning 'get line(%,%,%); values out of bounds',sect,start_ch,end_ch;
+			end if;
+	
+			if start_ch<end_ch then
+				return ST_LineSubstring(g,clamp(start_ch/len,0,1),clamp(end_ch/len,0,1));
+			end if;
+
+			if start_ch>end_ch then
+				return ST_reverse(ST_LineSubstring(g,clamp(end_ch/len,0,1),clamp(start_ch/len,0,1)));
+			end if;
+
+			return null;
+		
+		--return make_line(g,len,start_ch,end_ch);
+		END;			
+$$ LANGUAGE plpgsql;
